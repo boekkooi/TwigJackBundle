@@ -1,0 +1,32 @@
+{
+    "name": "boekkooi/twig-jack",
+    "type": "symfony-bundle",
+    "keywords": [ "twig", "symfony" ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": "~2.1",
+        "symfony/twig-bundle": "~2.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "fabpot/php-cs-fixer": "~0.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Warnar Boekkooi",
+            "email": "warnar@boekkooi.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Boekkooi\\Bundle\\TwigJackBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Boekkooi\\Bundle\\TwigJackBundle\\": "tests/"
+        }
+    }
+}

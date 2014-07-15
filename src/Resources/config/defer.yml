@@ -1,0 +1,9 @@
+parameters:
+  boekkooi.twigjack.defer.extension.class: Boekkooi\Bundle\TwigJackBundle\Twig\Extension\DeferExtension
+
+services:
+  # defer extension
+  boekkooi.twigjack.defer.extension.extension:
+    class: %xoip_twig.defer.extension.class%
+    tags:
+      - { name: "twig.extension" }

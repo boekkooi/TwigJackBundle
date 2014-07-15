@@ -1,0 +1,2 @@
+parameters:
+  templating.name_parser.class: Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser
