@@ -11,11 +11,12 @@ use Twig_Node_BlockReference;
  */
 class DeferReference extends Twig_Node_BlockReference
 {
-    public function __construct($name, $reference, $lineno, $tag = null)
+    public function __construct($name, $unique, $reference, $lineno, $tag = null)
     {
         parent::__construct($name, $lineno, $tag);
 
         $this->setAttribute('reference', $reference);
+        $this->setAttribute('unique', $unique);
     }
 
     /**
@@ -28,9 +29,20 @@ class DeferReference extends Twig_Node_BlockReference
         $name = $this->getAttribute('name');
         $reference = $this->getAttribute('reference');
 
-        $compiler
-            ->addDebugInfo($this)
-            ->write("\$this->env->getExtension('defer')->cache('{$reference}', '{$name}', \$this->renderBlock('{$name}', \$context, \$blocks));\n")
-        ;
+        if ($this->getAttribute('unique')) {
+            $compiler
+                ->addDebugInfo($this)
+                ->write("if (!\$this->env->getExtension('defer')->contains('{$reference}', '{$name}')) {\n")
+                ->indent()
+                    ->write("\$this->env->getExtension('defer')->cache('{$reference}', '{$name}', \$this->renderBlock('{$name}', \$context, \$blocks));\n")
+                ->outdent()
+                ->write("}\n")
+            ;
+        } else {
+            $compiler
+                ->addDebugInfo($this)
+                ->write("\$this->env->getExtension('defer')->cache('{$reference}', '{$name}', \$this->renderBlock('{$name}', \$context, \$blocks));\n")
+            ;
+        }
     }
 }

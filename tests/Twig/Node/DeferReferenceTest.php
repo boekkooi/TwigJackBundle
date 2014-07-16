@@ -13,10 +13,11 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
      */
     public function testConstructor()
     {
-        $node = new DeferReference('foo', 'bar', 1);
+        $node = new DeferReference('foo', false, 'bar', 1);
 
         $this->assertEquals('foo', $node->getAttribute('name'));
         $this->assertEquals('bar', $node->getAttribute('reference'));
+        $this->assertEquals(false, $node->getAttribute('unique'));
     }
 
     /**
@@ -31,9 +32,16 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
     public function getTests()
     {
         return array(
-            array(new DeferReference('foo', 'js', 1), <<<EOF
+            array(new DeferReference('foo', false, 'js', 1), <<<EOF
 // line 1
 \$this->env->getExtension('defer')->cache('js', 'foo', \$this->renderBlock('foo', \$context, \$blocks));
+EOF
+            ),
+            array(new DeferReference('foo', true, 'js', 1), <<<EOF
+// line 1
+if (!\$this->env->getExtension('defer')->contains('js', 'foo')) {
+    \$this->env->getExtension('defer')->cache('js', 'foo', \$this->renderBlock('foo', \$context, \$blocks));
+}
 EOF
             ),
         );

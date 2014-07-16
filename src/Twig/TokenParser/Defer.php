@@ -25,6 +25,13 @@ class Defer extends Twig_TokenParser
 {
     private static $i = 0;
 
+    protected $blockPrefix;
+
+    public function __construct($blockPrefix)
+    {
+        $this->blockPrefix = $blockPrefix;
+    }
+
     /**
      * Parses a token and returns a node.
      *
@@ -39,15 +46,16 @@ class Defer extends Twig_TokenParser
         $reference = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
 
         $name = $stream->nextIf(\Twig_Token::NAME_TYPE);
-        if ($name === null) {
-            do {
-                $name = 'defer_ref_' . $reference . (self::$i++);
-            } while ($this->parser->hasBlock($name));
-        } else {
-            $name = $name->getValue();
+        $unique = $name === null;
+        if ($unique) {
+            $name = $this->blockPrefix . $name->getValue();
             if ($this->parser->hasBlock($name)) {
                 return null;
             }
+        } else {
+            do {
+                $name = $this->blockPrefix . $reference . (self::$i++);
+            } while ($this->parser->hasBlock($name));
         }
 
         $this->parser->setBlock($name, $block = new Node\Defer($name, new Twig_Node(array()), $lineno));
@@ -74,7 +82,7 @@ class Defer extends Twig_TokenParser
         $this->parser->popBlockStack();
         $this->parser->popLocalScope();
 
-        return new Node\DeferReference($name, $reference, $lineno, $this->getTag());
+        return new Node\DeferReference($name, $unique, $reference, $lineno, $this->getTag());
     }
 
     public function decideBlockEnd(Twig_Token $token)

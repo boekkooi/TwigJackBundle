@@ -9,13 +9,21 @@ use Boekkooi\Bundle\TwigJackBundle\Twig\TokenParser;
 class DeferExtension extends \Twig_Extension
 {
     protected $references = array();
+
+    protected $deferBlockPrefix;
+
+    public function __construct($deferBlockPrefix = '_defer_ref_')
+    {
+        $this->deferBlockPrefix = $deferBlockPrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getTokenParsers()
     {
         return array(
-            new TokenParser\Defer()
+            new TokenParser\Defer($this->deferBlockPrefix)
         );
     }
 
@@ -34,6 +42,11 @@ class DeferExtension extends \Twig_Extension
             $this->references[$type] = array();
         }
         $this->references[$type][$name] = $content;
+    }
+
+    public function contains($type, $name)
+    {
+        return isset($this->references[$type]) && isset($this->references[$type][$name]);
     }
 
     public function retrieve($type, $clear = true)

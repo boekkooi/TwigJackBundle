@@ -19,7 +19,15 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('boekkooi_twig_jack');
         $rootNode
             ->children()
-                ->booleanNode('defer')->defaultTrue()->end()
+                ->arrayNode('defer')
+                    ->treatNullLike(array())
+                    ->treatFalseLike(array('enabled' => false))
+                    ->treatTrueLike(array('enabled' => true))
+                    ->children()
+                        ->booleanNode('enabled')->defaultTrue()->end()
+                        ->scalarNode('prefix')->defaultValue('_defer_ref_')->end()
+                    ->end()
+                ->end()
                 ->booleanNode('exclamation')->defaultTrue()->end()
             ->end();
 
