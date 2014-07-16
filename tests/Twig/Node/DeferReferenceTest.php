@@ -9,7 +9,7 @@ use Boekkooi\Bundle\TwigJackBundle\Twig\Node\DeferReference;
 class DeferReferenceTest extends \Twig_Test_NodeTestCase
 {
     /**
-     * @covers Twig_Node_BlockReference::__construct
+     * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\DeferReference::__construct
      */
     public function testConstructor()
     {
@@ -21,7 +21,7 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
     }
 
     /**
-     * @covers Twig_Node_BlockReference::compile
+     * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\DeferReference::compile
      * @dataProvider getTests
      */
     public function testCompile($node, $source, $environment = null)
