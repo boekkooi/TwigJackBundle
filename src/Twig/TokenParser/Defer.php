@@ -46,7 +46,7 @@ class Defer extends Twig_TokenParser
         $reference = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
 
         $name = $stream->nextIf(\Twig_Token::NAME_TYPE);
-        $unique = $name === null;
+        $unique = $name !== null;
         if ($unique) {
             $name = $this->blockPrefix . $name->getValue();
             if ($this->parser->hasBlock($name)) {
