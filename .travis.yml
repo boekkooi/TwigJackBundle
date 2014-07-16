@@ -9,15 +9,21 @@ env:
   - SYMFONY_VERSION=2.4.*
   - SYMFONY_VERSION=2.5.*
 
-allow_failures:
+matrix:
+  allow_failures:
   - php: hhvm
 
 before_script:
   - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/framework-bundle=$SYMFONY_VERSION; composer require --no-update symfony/twig-bundle=$SYMFONY_VERSION; fi;'
+  - composer require --no-update satooshi/php-coveralls
   - composer install --dev --prefer-source
+  - mkdir -p build/logs
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+  - php vendor/bin/coveralls -v
 
 cache:
   directories:
