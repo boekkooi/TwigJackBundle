@@ -3,7 +3,7 @@ parameters:
 
 services:
   # defer extension
-  boekkooi.twigjack.defer.extension.extension:
-    class: %xoip_twig.defer.extension.class%
+  boekkooi.twigjack.defer.extension:
+    class: %boekkooi.twigjack.defer.extension.class%
     tags:
       - { name: "twig.extension" }

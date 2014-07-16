@@ -1,15 +1,15 @@
 {
-    "name": "boekkooi/twig-jack",
+    "name": "boekkooi/twig-jack-bundle",
     "type": "symfony-bundle",
-    "keywords": [ "twig", "symfony" ],
+    "keywords": [ "twig", "symfony", "defer", "inheritance" ],
+    "description": "Handy additional features for Twig within symfony 2",
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "~2.1",
         "symfony/twig-bundle": "~2.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "fabpot/php-cs-fixer": "~0.5"
+        "phpunit/phpunit": "~4.0"
     },
     "license": "MIT",
     "authors": [
@@ -18,7 +18,6 @@
             "email": "warnar@boekkooi.net"
         }
     ],
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Boekkooi\\Bundle\\TwigJackBundle\\": "src/"
@@ -28,5 +27,6 @@
         "psr-4": {
             "Tests\\Boekkooi\\Bundle\\TwigJackBundle\\": "tests/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

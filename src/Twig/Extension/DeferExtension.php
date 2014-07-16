@@ -46,6 +46,7 @@ class DeferExtension extends \Twig_Extension
         if ($clear) {
             unset($this->references[$type]);
         }
+
         return $rtn;
     }
 

@@ -1,5 +1,5 @@
 <?php
-namespace Boekkooi\src\DependencyInjection;
+namespace Boekkooi\Bundle\TwigJackBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
