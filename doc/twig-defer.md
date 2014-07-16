@@ -1,8 +1,8 @@
 Twig Defer Block
 =============
-This Twig extension adds a defer block rendering.
-A defer block allows you to defer a block withing it's current context but show the output at a later stage in the template.
-By default the defer block will append information based on it's reference name, this will allow you to define multiple defer block which will then be outputted at a single place.
+This Twig extension adds defer block rendering.
+A defer block allows you to defer a block within its current context but show the output at a later stage in the template.
+By default, the defer block will append information based on its reference name, this allows you to define multiple defer block which are then output at a single place.
  
 Example
 -------------
@@ -27,8 +27,8 @@ Output:
 
 Example with unique
 -------------
-When using the defer block a second name can be given. 
-This name allows you to only render a block with that name once. (Remark: This will always pick the first block with the second name)  
+When using the defer block, a second name can be given. 
+This name allows you to only render a block with that name once. (Note: This will always pick the first block with the second name)  
 ```jinja
 {% set bar = ['1', '2'] %}
 {% for x in xs %}
