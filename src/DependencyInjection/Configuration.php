@@ -20,6 +20,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('defer')
+                    ->addDefaultsIfNotSet()
                     ->treatNullLike(array())
                     ->treatFalseLike(array('enabled' => false))
                     ->treatTrueLike(array('enabled' => true))
