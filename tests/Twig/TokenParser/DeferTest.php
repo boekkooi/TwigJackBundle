@@ -7,6 +7,7 @@ use Boekkooi\Bundle\TwigJackBundle\Twig\TokenParser\Defer;
 
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>
+ * @covers Boekkooi\Bundle\TwigJackBundle\Twig\TokenParser\Defer
  */
 class DeferTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,6 +28,34 @@ class DeferTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(count($blocksExpected), $result->getNode('blocks'));
         $this->assertEquals($blocksExpected, $result->getNode('blocks'));
+    }
+
+    /**
+     * @expectedException \Twig_Error_Syntax
+     * @expectedExceptionMessage Expected enddefer for defer 'def
+     */
+    public function testInvalidEndBlockName()
+    {
+        $env = new \Twig_Environment(new \Twig_Loader_String(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));
+        $env->addTokenParser(new Defer('def_'));
+        $stream = $env->tokenize('{% defer js %}X{% enddefer css %}');
+        $parser = new \Twig_Parser($env);
+
+        $parser->parse($stream);
+    }
+
+    /**
+     * @expectedException \Twig_Error_Syntax
+     * @expectedExceptionMessage expecting closing tag for the "defer" tag
+     */
+    public function testInvalidEndBlock()
+    {
+        $env = new \Twig_Environment(new \Twig_Loader_String(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));
+        $env->addTokenParser(new Defer('def_'));
+        $stream = $env->tokenize('{% defer js %}X{% endblock js %}');
+        $parser = new \Twig_Parser($env);
+
+        $parser->parse($stream);
     }
 
     public function getTests()
@@ -71,16 +100,17 @@ EOF
             ),
             array(<<<EOF
 {% defer js 'x' %}UNIQUE X{% enddefer %}
+{% defer js 'x' %}I should not be compiled{% enddefer %}
 {% defer js 'y' %}UNIQUE Y{% enddefer %}
 EOF
                 ,
                 new \Twig_Node(array(
                         new DeferReference('def_jsx', false, true, 'js', 1, 'defer'),
-                        new DeferReference('def_jsy', false, true, 'js', 2, 'defer')
+                        new DeferReference('def_jsy', false, true, 'js', 3, 'defer')
                     ), array(), 1),
                 new \Twig_Node(array(
                         'def_jsx' => new \Twig_Node_Body(array(new DeferNode('def_jsx', new \Twig_Node_Text('UNIQUE X', 1), 1)), array(), 1),
-                        'def_jsy' => new \Twig_Node_Body(array(new DeferNode('def_jsy', new \Twig_Node_Text('UNIQUE Y', 2), 2)), array(), 2)
+                        'def_jsy' => new \Twig_Node_Body(array(new DeferNode('def_jsy', new \Twig_Node_Text('UNIQUE Y', 3), 3)), array(), 3)
                     ))
             )
         );

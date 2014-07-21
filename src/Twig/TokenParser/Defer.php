@@ -47,15 +47,14 @@ class Defer extends Twig_TokenParser
         $name = $name !== null ? $name->getValue() : false;
 
         $unique = $name !== false;
+        $reject = false;
 
         $variableName = $stream->nextIf(\Twig_Token::NAME_TYPE);
         $variableName = $variableName !== null ? $variableName->getValue() : false;
 
         if ($name) {
             $name = $this->blockPrefix . $reference . $name;
-            if ($this->parser->hasBlock($name)) {
-                return null;
-            }
+            $reject = $this->parser->hasBlock($name);
         } else {
             $i = 0;
             do {
@@ -63,9 +62,11 @@ class Defer extends Twig_TokenParser
             } while ($this->parser->hasBlock($name));
         }
 
-        $this->parser->setBlock($name, $block = new Node\Defer($name, new Twig_Node(array()), $lineno));
-        $this->parser->pushLocalScope();
-        $this->parser->pushBlockStack($name);
+        if (!$reject) {
+            $this->parser->setBlock($name, $block = new Node\Defer($name, new Twig_Node(array()), $lineno));
+            $this->parser->pushLocalScope();
+            $this->parser->pushBlockStack($name);
+        }
 
         if ($stream->nextIf(Twig_Token::BLOCK_END_TYPE)) {
             $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
@@ -83,10 +84,15 @@ class Defer extends Twig_TokenParser
         }
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
-        $block->setNode('body', $body);
-        $this->parser->popBlockStack();
-        $this->parser->popLocalScope();
+        if (!$reject) {
+            $block->setNode('body', $body);
+            $this->parser->popBlockStack();
+            $this->parser->popLocalScope();
+        }
 
+        if ($reject) {
+            return null;
+        }
         return new Node\DeferReference($name, $variableName, $unique, $reference, $lineno, $this->getTag());
     }
 
