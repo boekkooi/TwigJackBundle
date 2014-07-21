@@ -24,20 +24,22 @@ class DeferExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testCacheAndRetrieve()
     {
-        $this->extension->cache('a', 'a', 'c');
-        $this->extension->cache('a', 'b', 'c');
+        $this->extension->cache('a', 'c', 'a');
+        $this->extension->cache('a', 'c');
         $this->extension->cache('a', 'c', 'c');
 
-        $this->extension->cache('b', 'a', 'c');
-        $this->extension->cache('b', 'b', 'c');
+        $this->extension->cache('b', 'c', 'a');
+        $this->extension->cache('b', 'c', 'b');
 
         $res = $this->extension->retrieve('a');
         $this->assertInternalType('array', $res);
         $this->assertCount(3, $res);
+        $this->assertEquals(array('a' => 'c', 'c', 'c' => 'c'), $res);
 
         $res = $this->extension->retrieve('b');
         $this->assertInternalType('array', $res);
         $this->assertCount(2, $res);
+        $this->assertEquals(array('a' => 'c', 'b' => 'c'), $res);
     }
 
     public function testRetrieveClear()
@@ -61,8 +63,7 @@ class DeferExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $res);
         $this->assertCount(1, $res);
 
-        $res = $this->extension->retrieve('a');
-        $this->assertInternalType('array', $res);
-        $this->assertCount(1, $res);
+        $resSame = $this->extension->retrieve('a');
+        $this->assertEquals($res, $resSame);
     }
 }

@@ -23,8 +23,6 @@ use Boekkooi\Bundle\TwigJackBundle\Twig\Node;
  */
 class Defer extends Twig_TokenParser
 {
-    private static $i = 0;
-
     protected $blockPrefix;
 
     public function __construct($blockPrefix)
@@ -45,16 +43,23 @@ class Defer extends Twig_TokenParser
         $stream = $this->parser->getStream();
         $reference = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
 
-        $name = $stream->nextIf(\Twig_Token::NAME_TYPE);
-        $unique = $name !== null;
-        if ($unique) {
-            $name = $this->blockPrefix . $name->getValue();
+        $name = $stream->nextIf(\Twig_Token::STRING_TYPE);
+        $name = $name !== null ? $name->getValue() : false;
+
+        $unique = $name !== false;
+
+        $variableName = $stream->nextIf(\Twig_Token::NAME_TYPE);
+        $variableName = $variableName !== null ? $variableName->getValue() : false;
+
+        if ($name) {
+            $name = $this->blockPrefix . $reference . $name;
             if ($this->parser->hasBlock($name)) {
                 return null;
             }
         } else {
+            $i = 0;
             do {
-                $name = $this->blockPrefix . $reference . (self::$i++);
+                $name = $this->blockPrefix . $reference . ($i++);
             } while ($this->parser->hasBlock($name));
         }
 
@@ -73,8 +78,8 @@ class Defer extends Twig_TokenParser
             }
         } else {
             $body = new Twig_Node(array(
-                new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
-            ));
+                    new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
+                ));
         }
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
@@ -82,7 +87,7 @@ class Defer extends Twig_TokenParser
         $this->parser->popBlockStack();
         $this->parser->popLocalScope();
 
-        return new Node\DeferReference($name, $unique, $reference, $lineno, $this->getTag());
+        return new Node\DeferReference($name, $variableName, $unique, $reference, $lineno, $this->getTag());
     }
 
     public function decideBlockEnd(Twig_Token $token)

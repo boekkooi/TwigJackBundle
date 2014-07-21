@@ -9,10 +9,10 @@ Example
 ```jinja
 {% defer js %}
     <script src="1.js" />
-{% endblock %}
+{% enddefer %}
 {% defer js %}
     <script src="2.js" />
-{% endblock %}
+{% enddefer %}
 
 <p>Hello</p>
 {{ defer('js') }}
@@ -27,28 +27,41 @@ Output:
 
 Example with unique
 -------------
-When using the defer block, a second name can be given. 
+When using the defer block, a second name can be given. It can be a variable or a string, when using a variable make use it has a scalar value. 
 This name allows you to only render a block with that name once. (Note: This will always pick the first block with the second name)  
 ```jinja
 {% set bar = ['1', '2'] %}
 {% for x in xs %}
-    {% defer js once %}
+    {% defer js 'once' %}
         <script src="once.js" />
-    {% endblock %}
+    {% enddefer %}
+    {% defer js x %}
+        <script src="once_{x}.js" />
+    {% enddefer %}
     {% defer js %}
         <script src="{x}.js" />
-    {% endblock %}
+    {% enddefer %}
 {% endfor %}
 
-<p>Hello</p>
+{% for x in xs %}
+    {% defer js x %}
+        <script src="once_{x}.js" />
+    {% enddefer %}
+    <li>x</li>
+{% endfor %}
 {{ defer('js') }}
 ```
 
 Output:
 ```html
-<p>Hello</p>
+<ul>
+    <li>1</li>
+    <li>2</li>
+</ul>
         <script src="once.js" />
+        <script src="once_1.js" />
         <script src="1.js" />
+        <script src="once_2.js" />
         <script src="2.js" />
 ```
 

@@ -36,12 +36,16 @@ class DeferExtension extends \Twig_Extension
         );
     }
 
-    public function cache($type, $name, $content)
+    public function cache($type, $content, $name = null)
     {
         if (!isset($this->references[$type])) {
             $this->references[$type] = array();
         }
-        $this->references[$type][$name] = $content;
+        if ($name === null) {
+            $this->references[$type][] = $content;
+        } else {
+            $this->references[$type][$name] = $content;
+        }
     }
 
     public function contains($type, $name)
