@@ -20,7 +20,7 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
     }
 
     /**
-     * @covers Twig_Node_Expression_Array::compile
+     * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\Expression\DeferReference::compile
      * @dataProvider getTests
      */
     public function testCompile($node, $source, $environment = null)
