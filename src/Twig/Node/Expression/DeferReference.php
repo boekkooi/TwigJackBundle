@@ -31,6 +31,7 @@ class DeferReference extends \Twig_Node_Expression_BlockReference
 
         if ($this->getAttribute('output')) {
             $compiler
+                ->addDebugInfo($this)
                 ->write("\$_defer_block_references = \$this->env->getExtension('defer')->retrieve(")
                     ->subcompile($this->getNode('name'))
                     ->raw(");\n")
@@ -43,19 +44,9 @@ class DeferReference extends \Twig_Node_Expression_BlockReference
             ;
         } else {
             $compiler
-                ->addDebugInfo($this)
-                ->raw("implode('', array_map(\n")
-                ->indent()
-                    ->write("\\Closure::bind(function (\$defer_block_reference) use (\$context, \$blocks) {\n")
-                    ->indent()
-                        ->write("return \$defer_block_reference;\n")
-                    ->outdent()
-                    ->write("}, \$this),\n")
-                    ->write("\$this->env->getExtension('defer')->retrieve(")
-                        ->subcompile($this->getNode('name'))
-                        ->raw(")\n")
-                ->outdent()
-                ->write("))")
+                ->raw("implode('', \$this->env->getExtension('defer')->retrieve(")
+                    ->subcompile($this->getNode('name'))
+                    ->raw("))\n")
             ;
         }
     }
