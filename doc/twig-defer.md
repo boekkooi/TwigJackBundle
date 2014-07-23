@@ -27,8 +27,8 @@ Output:
 
 Example with unique
 -------------
-When using the defer block, a second name can be given. It can be a variable or a string, when using a variable make use it has a scalar value. 
-This name allows you to only render a block with that name once. (Note: This will always pick the first block with the second name)  
+When using the defer block, a second name can be given. It can be a variable or a string, when using a variable make sure it has a scalar value. 
+A unique name allows you to only render a block once. (Note: This will always pick the first block with the second name)
 ```jinja
 {% set bar = ['1', '2'] %}
 {% for x in xs %}
