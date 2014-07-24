@@ -22,7 +22,7 @@ class TemplateNameParser extends BaseTemplateNameParser
         // normalize name (see TemplateNameParser line 52)
         $name = str_replace(':/', ':', preg_replace('#/{2,}#', '/', strtr($name, '\\', '/')));
         if (isset($this->cache['!' . $name])) {
-            return $this->cache[$name];
+            return $this->cache['!' . $name];
         }
 
         $reference = parent::parse($name);

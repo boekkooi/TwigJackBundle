@@ -57,6 +57,12 @@ class TemplateNameParserTest extends ParentTemplateNameParserTest
         $this->parser = new TemplateNameParser($kernel);
     }
 
+    public function testSkipTemplateReferenceInterfaceParse()
+    {
+        $template = new TemplateReference('ref.php', 'php');
+        $this->assertEquals($template, $this->parser->parse($template));
+    }
+
     /**
      * @dataProvider getExclamationToTemplateProvider
      */
@@ -64,8 +70,11 @@ class TemplateNameParserTest extends ParentTemplateNameParserTest
     {
         $template = $this->parser->parse($name);
 
-        $this->assertEquals($template->getPath(), $ref->getPath());
-        $this->assertEquals($template->getLogicalName(), $ref->getLogicalName());
+        $this->assertEquals($ref->getPath(), $template->getPath());
+        $this->assertEquals($ref->getLogicalName(), $template->getLogicalName());
+
+        // Test cache
+        $this->assertEquals($template, $this->parser->parse($name));
     }
 
     public function getExclamationToTemplateProvider()
