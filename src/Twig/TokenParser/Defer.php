@@ -1,12 +1,11 @@
 <?php
 namespace Boekkooi\Bundle\TwigJackBundle\Twig\TokenParser;
 
+use Boekkooi\Bundle\TwigJackBundle\Twig\Node;
 use Twig_Error_Syntax;
 use Twig_Node;
-use Twig_Node_Print;
 use Twig_Token;
 use Twig_TokenParser;
-use Boekkooi\Bundle\TwigJackBundle\Twig\Node;
 use Twig_TokenStream;
 
 /**
