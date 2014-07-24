@@ -22,6 +22,13 @@ class DeferExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension = null;
     }
 
+    public function testGetters()
+    {
+        $this->assertCount(1, $this->extension->getTokenParsers());
+        $this->assertCount(1, $this->extension->getFunctions());
+        $this->assertEquals('defer', $this->extension->getName());
+    }
+
     public function testCacheAndRetrieve()
     {
         $this->extension->cache('a', 'c', 'a');
@@ -65,5 +72,20 @@ class DeferExtensionTest extends \PHPUnit_Framework_TestCase
 
         $resSame = $this->extension->retrieve('a');
         $this->assertEquals($res, $resSame);
+    }
+
+    public function testContains()
+    {
+        $this->assertFalse($this->extension->contains('type', 'name'));
+        $this->assertFalse($this->extension->contains('type', 'fake_name'));
+        $this->assertFalse($this->extension->contains('fake_type', 'name'));
+        $this->assertFalse($this->extension->contains('fake_type', 'fake_name'));
+
+        $this->extension->cache('type', 'content', 'name');
+
+        $this->assertTrue($this->extension->contains('type', 'name'));
+        $this->assertFalse($this->extension->contains('type', 'fake_name'));
+        $this->assertFalse($this->extension->contains('fake_type', 'name'));
+        $this->assertFalse($this->extension->contains('fake_type', 'fake_name'));
     }
 }
