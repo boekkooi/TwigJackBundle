@@ -20,6 +20,18 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
     }
 
     /**
+     * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\Expression\DeferReference::__construct
+     *
+     * @expectedException \Twig_Error_Syntax
+     * @expectedExceptionMessage Only one argument is allowed for "defer".
+     */
+    public function testConstructorMultipleNodes()
+    {
+        $valueNode = new \Twig_Node_Expression_Constant('js', 1);
+        new DeferReference('defer', new \Twig_Node(array($valueNode, $valueNode)), 1);
+    }
+
+    /**
      * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\Expression\DeferReference::compile
      * @dataProvider getTests
      */
