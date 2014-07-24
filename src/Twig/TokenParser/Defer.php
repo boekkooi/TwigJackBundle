@@ -115,10 +115,10 @@ class Defer extends Twig_TokenParser
                 }
             }
         } else {
-            $body = new Twig_Node(
-                array(
-                    new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
-                )
+            throw new Twig_Error_Syntax(
+                "Expected enddefer for defer '$name'",
+                $stream->getCurrent()->getLine(),
+                $stream->getFilename()
             );
         }
         $stream->expect(Twig_Token::BLOCK_END_TYPE);

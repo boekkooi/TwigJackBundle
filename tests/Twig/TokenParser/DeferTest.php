@@ -32,7 +32,21 @@ class DeferTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Twig_Error_Syntax
-     * @expectedExceptionMessage Expected enddefer for defer 'def
+     * @expectedExceptionMessage Expected enddefer for defer 'def_jsx'
+     */
+    public function testNoEndBlock()
+    {
+        $env = new \Twig_Environment(new \Twig_Loader_String(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));
+        $env->addTokenParser(new Defer('def_'));
+        $stream = $env->tokenize('{% defer js "x" "foo" %}');
+        $parser = new \Twig_Parser($env);
+
+        $parser->parse($stream);
+    }
+
+    /**
+     * @expectedException \Twig_Error_Syntax
+     * @expectedExceptionMessage Expected enddefer for defer 'def_js0' (but css given)
      */
     public function testInvalidEndBlockName()
     {
