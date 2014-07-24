@@ -56,7 +56,7 @@ class Defer extends Twig_TokenParser
         if ($name) {
             $name = $this->blockPrefix . $reference . $name;
             if ($this->parser->hasBlock($name)) {
-                $this->bodyParse($stream, $name, $lineno);
+                $this->bodyParse($stream, $name);
                 return null;
             }
         } else {
@@ -70,7 +70,7 @@ class Defer extends Twig_TokenParser
         $this->parser->pushLocalScope();
         $this->parser->pushBlockStack($name);
 
-        $body = $this->bodyParse($stream, $name, $lineno);
+        $body = $this->bodyParse($stream, $name);
 
         $block->setNode('body', $body);
         $this->parser->popBlockStack();
