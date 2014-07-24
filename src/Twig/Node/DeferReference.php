@@ -11,6 +11,14 @@ use Twig_Node_BlockReference;
  */
 class DeferReference extends Twig_Node_BlockReference
 {
+    /**
+     * @param string $name
+     * @param string $variable
+     * @param boolean $unique
+     * @param boolean $reference
+     * @param integer $lineno The line number
+     * @param string $tag The tag name associated with the Node
+     */
     public function __construct($name, $variable, $unique, $reference, $lineno, $tag = null)
     {
         parent::__construct($name, $lineno, $tag);

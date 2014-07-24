@@ -7,6 +7,7 @@ use Twig_Node_Print;
 use Twig_Token;
 use Twig_TokenParser;
 use Boekkooi\Bundle\TwigJackBundle\Twig\Node;
+use Twig_TokenStream;
 
 /**
  * Marks a section of a template as being usable in a later stage.
@@ -25,6 +26,9 @@ class Defer extends Twig_TokenParser
 {
     protected $blockPrefix;
 
+    /**
+     * @param string $blockPrefix
+     */
     public function __construct($blockPrefix)
     {
         $this->blockPrefix = $blockPrefix;
@@ -34,8 +38,7 @@ class Defer extends Twig_TokenParser
      * Parses a token and returns a node.
      *
      * @param Twig_Token $token A Twig_Token instance
-     *
-     * @return Twig_Token A Twig_NodeInterface instance
+     * @return null|Twig_Token A Twig_NodeInterface instance
      */
     public function parse(Twig_Token $token)
     {
@@ -47,14 +50,16 @@ class Defer extends Twig_TokenParser
         $name = $name !== null ? $name->getValue() : false;
 
         $unique = $name !== false;
-        $reject = false;
 
         $variableName = $stream->nextIf(\Twig_Token::NAME_TYPE);
         $variableName = $variableName !== null ? $variableName->getValue() : false;
 
         if ($name) {
             $name = $this->blockPrefix . $reference . $name;
-            $reject = $this->parser->hasBlock($name);
+            if ($this->parser->hasBlock($name)) {
+                $this->bodyParse($stream, $name, $lineno);
+                return null;
+            }
         } else {
             $i = 0;
             do {
@@ -62,37 +67,16 @@ class Defer extends Twig_TokenParser
             } while ($this->parser->hasBlock($name));
         }
 
-        if (!$reject) {
-            $this->parser->setBlock($name, $block = new Node\Defer($name, new Twig_Node(array()), $lineno));
-            $this->parser->pushLocalScope();
-            $this->parser->pushBlockStack($name);
-        }
+        $this->parser->setBlock($name, $block = new Node\Defer($name, new Twig_Node(array()), $lineno));
+        $this->parser->pushLocalScope();
+        $this->parser->pushBlockStack($name);
 
-        if ($stream->nextIf(Twig_Token::BLOCK_END_TYPE)) {
-            $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
-            if ($token = $stream->nextIf(Twig_Token::NAME_TYPE)) {
-                $value = $token->getValue();
+        $body = $this->bodyParse($stream, $name, $lineno);
 
-                if ($value != $name) {
-                    throw new Twig_Error_Syntax(sprintf("Expected enddefer for defer '$name' (but %s given)", $value), $stream->getCurrent()->getLine(), $stream->getFilename());
-                }
-            }
-        } else {
-            $body = new Twig_Node(array(
-                    new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
-                ));
-        }
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $block->setNode('body', $body);
+        $this->parser->popBlockStack();
+        $this->parser->popLocalScope();
 
-        if (!$reject) {
-            $block->setNode('body', $body);
-            $this->parser->popBlockStack();
-            $this->parser->popLocalScope();
-        }
-
-        if ($reject) {
-            return null;
-        }
         return new Node\DeferReference($name, $variableName, $unique, $reference, $lineno, $this->getTag());
     }
 
@@ -107,5 +91,37 @@ class Defer extends Twig_TokenParser
     public function getTag()
     {
         return 'defer';
+    }
+
+    /**
+     * @param Twig_TokenStream $stream
+     * @param string $name
+     * @param integer $lineno
+     * @return Twig_Node
+     */
+    public function bodyParse(Twig_TokenStream $stream, $name, $lineno)
+    {
+        if ($stream->nextIf(Twig_Token::BLOCK_END_TYPE)) {
+            $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+            if ($token = $stream->nextIf(Twig_Token::NAME_TYPE)) {
+                $value = $token->getValue();
+
+                if ($value != $name) {
+                    throw new Twig_Error_Syntax(
+                        sprintf("Expected enddefer for defer '$name' (but %s given)", $value),
+                        $stream->getCurrent()->getLine(),
+                        $stream->getFilename()
+                    );
+                }
+            }
+        } else {
+            $body = new Twig_Node(
+                array(
+                    new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
+                )
+            );
+        }
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        return $body;
     }
 }
