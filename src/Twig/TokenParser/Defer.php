@@ -99,7 +99,7 @@ class Defer extends Twig_TokenParser
      * @param integer $lineno
      * @return Twig_Node
      */
-    public function bodyParse(Twig_TokenStream $stream, $name, $lineno)
+    protected function bodyParse(Twig_TokenStream $stream, $name, $lineno)
     {
         if ($stream->nextIf(Twig_Token::BLOCK_END_TYPE)) {
             $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
