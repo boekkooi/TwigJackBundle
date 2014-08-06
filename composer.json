@@ -6,7 +6,8 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "~2.1",
-        "symfony/twig-bundle": "~2.1"
+        "symfony/twig-bundle": "~2.1",
+        "twig/twig": "~1.15"
     },
     "suggest": {
         "doctrine/common": "Needed to use the twig doctrine loader functionality.",
