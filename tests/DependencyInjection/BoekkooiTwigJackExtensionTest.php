@@ -32,6 +32,7 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array('boekkooi_twig_jack' => array()), $container);
 
         $this->assertTrue($container->has('boekkooi.twig_jack.defer.extension'));
+        $this->assertFalse($container->has('boekkooi.twig_jack.constraint_validator'));
         $this->assertTrue($container->hasParameter('boekkooi.twig_jack.defer.prefix'));
         $this->assertTrue($container->hasParameter('templating.name_parser.class'));
         $this->assertEquals('Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser', $container->getParameter('templating.name_parser.class'));
@@ -267,4 +268,33 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @dataProvider getLoadConstraint
+     */
+    public function testLoadConstraint($options, $envServiceName)
+    {
+        $container = new ContainerBuilder();
+        $this->extension->load(array('boekkooi_twig_jack' => $options), $container);
+
+        $this->assertTrue($container->has('boekkooi.twig_jack.constraint_validator'));
+
+        /** @var \Symfony\Component\DependencyInjection\Reference $envReference */
+        $envReference = $container->getDefinition('boekkooi.twig_jack.constraint_validator')->getArgument(0);
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $envReference);
+        $this->assertEquals($envServiceName, (string)$envReference);
+    }
+
+    public function getLoadConstraint()
+    {
+        return array(
+            array(
+                array('constraint' => true),
+                'twig'
+            ),
+            array(
+                array('constraint' => array('enabled' => true, 'environment' => 'new_twig')),
+                'new_twig'
+            )
+        );
+    }
 }

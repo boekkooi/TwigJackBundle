@@ -18,18 +18,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode = $treeBuilder->root('boekkooi_twig_jack');
         $rootNode->append($this->loadLoadersNode());
+        $rootNode->append($this->loadDeferNode());
+        $rootNode->append($this->loadConstraintNode());
         $rootNode
             ->children()
-                ->arrayNode('defer')
-                    ->addDefaultsIfNotSet()
-                    ->treatNullLike(array())
-                    ->treatFalseLike(array('enabled' => false))
-                    ->treatTrueLike(array('enabled' => true))
-                    ->children()
-                        ->booleanNode('enabled')->defaultTrue()->end()
-                        ->scalarNode('prefix')->defaultValue('_defer_ref_')->end()
-                    ->end()
-                ->end()
                 ->booleanNode('exclamation')->defaultTrue()->end()
             ->end();
 
@@ -62,6 +54,42 @@ class Configuration implements ConfigurationInterface
                         ->info('A service that returns the current locale that will be used by a template.')
                     ->end()
                 ->end()
+            ->end();
+
+        return $node;
+    }
+
+    private function loadDeferNode()
+    {
+        $treeBuilder = new TreeBuilder();
+
+        $node = $treeBuilder->root('defer');
+        $node
+            ->addDefaultsIfNotSet()
+            ->treatNullLike(array())
+            ->treatFalseLike(array('enabled' => false))
+            ->treatTrueLike(array('enabled' => true))
+            ->children()
+                ->booleanNode('enabled')->defaultTrue()->end()
+                ->scalarNode('prefix')->defaultValue('_defer_ref_')->end()
+            ->end();
+
+        return $node;
+    }
+
+    private function loadConstraintNode()
+    {
+        $treeBuilder = new TreeBuilder();
+
+        $node = $treeBuilder->root('constraint');
+        $node
+            ->addDefaultsIfNotSet()
+            ->treatNullLike(array())
+            ->treatFalseLike(array('enabled' => false))
+            ->treatTrueLike(array('enabled' => true))
+            ->children()
+                ->booleanNode('enabled')->defaultFalse()->end()
+                ->scalarNode('environment')->defaultValue('twig')->end()
             ->end();
 
         return $node;

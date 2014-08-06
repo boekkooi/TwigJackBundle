@@ -26,10 +26,8 @@ class BoekkooiTwigJackExtension extends Extension
         $processor = new Processor();
         $config = $processor->processConfiguration(new Configuration(), $config);
 
-        if ($config['defer']['enabled']) {
-            $container->setParameter('boekkooi.twig_jack.defer.prefix', $config['defer']['prefix']);
-            $loader->load('defer.yml');
-        }
+        $this->loadDefer($container, $loader, $config);
+        $this->loadConstraint($container, $loader, $config);
 
         if ($config['exclamation']) {
             $loader->load('exclamation.yml');
@@ -108,5 +106,26 @@ class BoekkooiTwigJackExtension extends Extension
             ->setArguments(array($modelClass));
 
         return $repositoryService;
+    }
+
+    private function loadDefer(ContainerBuilder $container, LoaderInterface $loader, array $config)
+    {
+        if (!$config['defer']['enabled']) {
+            return;
+        }
+
+        $container->setParameter('boekkooi.twig_jack.defer.prefix', $config['defer']['prefix']);
+        $loader->load('defer.yml');
+    }
+
+    private function loadConstraint(ContainerBuilder $container, LoaderInterface $loader, array $config)
+    {
+        if (!$config['constraint']['enabled']) {
+            return;
+        }
+
+        $loader->load('constraint.yml');
+        $container->getDefinition('boekkooi.twig_jack.constraint_validator')
+            ->replaceArgument(0, new Reference($config['constraint']['environment']));
     }
 }
