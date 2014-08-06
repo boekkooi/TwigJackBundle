@@ -17,6 +17,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
 
         $rootNode = $treeBuilder->root('boekkooi_twig_jack');
+        $rootNode->append($this->loadLoadersNode());
         $rootNode
             ->children()
                 ->arrayNode('defer')
@@ -33,5 +34,36 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         return $treeBuilder;
+    }
+
+    private function loadLoadersNode()
+    {
+        $treeBuilder = new TreeBuilder();
+
+        $node = $treeBuilder->root('loaders');
+        $node
+            ->useAttributeAsKey('name')
+            ->prototype('array')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('prefix')->isRequired()->treatNullLike('')->treatFalseLike('')->end()
+                    ->enumNode('type')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                        ->defaultValue('orm')
+                        ->values(array('orm', 'mongo', 'couch', 'custom'))
+                    ->end()
+                    ->scalarNode('repository')
+                        ->info('Custom service that must return a Doctrine\Common\Persistence\ObjectRepository')
+                    ->end()
+                    ->scalarNode('model_class')->isRequired()->cannotBeEmpty()->end()
+                    ->scalarNode('locale_callable')
+                        ->defaultValue(null)
+                        ->info('A service that returns the current locale that will be used by a template.')
+                    ->end()
+                ->end()
+            ->end();
+
+        return $node;
     }
 }

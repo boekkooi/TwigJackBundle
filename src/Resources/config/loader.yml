@@ -1,0 +1,30 @@
+parameters:
+  boekkooi.twig_jack.loader.class: Xoip\Bundle\TwigExtraBundle\Twig\Loader\DatabaseLoader
+
+  boekkooi.twig_jack.doctrine.object_manager.class: Doctrine\Common\Persistence\ObjectManager
+  boekkooi.twig_jack.doctrine.object_repository.class: Doctrine\Common\Persistence\ObjectRepository
+
+services:
+  # Abstract twig loader
+  boekkooi.twig_jack.loader.abstract:
+    public: false
+    abstract: true
+    class: %boekkooi.twig_jack.loader.class%
+    arguments: [ null, null, null ]
+
+  # Abstract factory to retrieve the manager of a entity
+  boekkooi.twig_jack.doctrine.object_manager.abstract:
+    public: false
+    abstract: true
+    class: %boekkooi.twig_jack.doctrine.object_manager.class%
+#    factory_service: doctrine
+    factory_method: getManagerForClass
+    arguments: [ ]
+
+  # Abstract factory to retrieve the repository of a entity
+  boekkooi.twig_jack.doctrine.object_repository.abstract:
+    public: false
+    abstract: true
+    class: %boekkooi.twig_jack.doctrine.object_repository.class%
+    factory_method: getRepository
+    arguments: [ ]
