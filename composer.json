@@ -1,15 +1,19 @@
 {
     "name": "boekkooi/twig-jack-bundle",
     "type": "symfony-bundle",
-    "keywords": [ "twig", "symfony", "defer", "inheritance" ],
+    "keywords": [ "twig", "symfony", "defer", "inheritance", "extension", "doctrine", "loader" ],
     "description": "Handy additional features for Twig within symfony 2",
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "~2.1",
         "symfony/twig-bundle": "~2.1"
     },
+    "suggest": {
+        "doctrine/common": "Needed to use the twig doctrine loader functionality."
+    },
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~4.0",
+        "doctrine/common": "~2.1"
     },
     "license": "MIT",
     "authors": [
