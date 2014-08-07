@@ -92,19 +92,20 @@ class BoekkooiTwigJackExtension extends Extension
         $repositoryService = sprintf('boekkooi.twig_jack.loaders.%s.object_repository', $loaderName);
         $entityManagerService = sprintf('boekkooi.twig_jack.loaders.%s.object_manager', $loaderName);
 
+        $modelClass = ltrim($loaderConfig['model_class'], '\\');
+
         // Create factory to get the entity manager for the entity
         $container
             ->setDefinition($entityManagerService, new DefinitionDecorator('boekkooi.twig_jack.doctrine.object_manager.abstract'))
+            ->setPublic(true)
             ->setFactoryService($managerService)
-            ->setArguments(array($loaderConfig['model_class']));
+            ->setArguments(array($modelClass));
 
         // Create factory to get the repository for the entity
         $container
             ->setDefinition($repositoryService, new DefinitionDecorator('boekkooi.twig_jack.doctrine.object_repository.abstract'))
             ->setFactoryService(new Reference($entityManagerService))
-            ->setArguments(array(
-                $loaderConfig['model_class']
-            ));
+            ->setArguments(array($modelClass));
 
         return $repositoryService;
     }

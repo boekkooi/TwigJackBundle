@@ -1,5 +1,5 @@
 parameters:
-  boekkooi.twig_jack.loader.class: Xoip\Bundle\TwigExtraBundle\Twig\Loader\DatabaseLoader
+  boekkooi.twig_jack.loader.class: Boekkooi\Bundle\TwigJackBundle\Twig\Loader\DoctrineLoader
 
   boekkooi.twig_jack.doctrine.object_manager.class: Doctrine\Common\Persistence\ObjectManager
   boekkooi.twig_jack.doctrine.object_repository.class: Doctrine\Common\Persistence\ObjectRepository
@@ -17,7 +17,6 @@ services:
     public: false
     abstract: true
     class: %boekkooi.twig_jack.doctrine.object_manager.class%
-#    factory_service: doctrine
     factory_method: getManagerForClass
     arguments: [ ]
 
