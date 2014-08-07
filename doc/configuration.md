@@ -20,7 +20,7 @@ public function registerBundles()
 }
 ```
 
-Configure the BoekkooiTwigJackBundle:
+Default configuration:
 ```yaml
 # app/config/config.yml
 boekkooi_twig_jack:

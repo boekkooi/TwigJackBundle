@@ -5,6 +5,9 @@ use Boekkooi\Bundle\TwigJackBundle\Model\TemplateInterface;
 use Boekkooi\Bundle\TwigJackBundle\Model\TranslatableTemplateInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 
+/**
+ * @author Warnar Boekkooi <warnar@boekkooi.net>
+ */
 class DoctrineLoader implements \Twig_LoaderInterface
 {
     const KEY_SEPARATOR = '|';

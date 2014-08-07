@@ -17,3 +17,7 @@ A defer/append twig block. [more...](doc/twig-defer.md)
 [The Exclamation Syntax](doc/templating-exclamation.md)
 -------------
 Use `{% extends "!@<bundle>" %}` to inherit from the root bundle. [more...](doc/templating-exclamation.md)
+
+[The Doctrine Loader](doc/twig-doctrine-loader.md)
+-------------
+Add one or multiple doctrine/database template loaders to twig with optional translation support. [more...](doc/templating-exclamation.md)
