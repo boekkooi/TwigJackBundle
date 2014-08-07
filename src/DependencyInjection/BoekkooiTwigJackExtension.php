@@ -100,9 +100,9 @@ class BoekkooiTwigJackExtension extends Extension
         $container
             ->setDefinition($repositoryService, new DefinitionDecorator('boekkooi.twig_jack.doctrine.object_repository.abstract'))
             ->setFactoryService(new Reference($entityManagerService))
-            ->setArguments([
+            ->setArguments(array(
                 $loaderConfig['model_class']
-            ]);
+            ));
 
         return $repositoryService;
     }

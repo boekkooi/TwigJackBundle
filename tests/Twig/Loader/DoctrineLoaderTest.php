@@ -12,6 +12,14 @@ class DoctrineLoaderTest extends \PHPUnit_Framework_TestCase
     const TRANSLATABLE_TEMPLATE_INTERFACE = 'Boekkooi\\Bundle\\TwigJackBundle\\Model\\TranslatableTemplateInterface';
 
     /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testConstructorInvalidCallable()
+    {
+        new DoctrineLoader($this->getMockRepository(), 'prefix::', new \stdClass());
+    }
+
+    /**
      * @dataProvider getInvalidPrefixMethods
      * @expectedException \Twig_Error_Loader
      * @expectedExceptionMessage Malformed namespaced
