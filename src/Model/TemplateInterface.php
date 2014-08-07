@@ -2,7 +2,7 @@
 namespace Boekkooi\Bundle\TwigJackBundle\Model;
 
 /**
- * Interface TemplateInterface
+ * @author Warnar Boekkooi <warnar@boekkooi.net>
  */
 interface TemplateInterface
 {

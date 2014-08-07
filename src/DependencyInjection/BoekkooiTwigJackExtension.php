@@ -83,8 +83,10 @@ class BoekkooiTwigJackExtension extends Extension
             case 'couch':
                 $managerService = 'doctrine_couchdb';
                 break;
+            // @codeCoverageIgnoreStart
             default:
                 throw new InvalidConfigurationException(sprintf('Unknown loader type provided for %s', $loaderName));
+            // @codeCoverageIgnoreEnd
         }
 
         $repositoryService = sprintf('boekkooi.twig_jack.loaders.%s.object_repository', $loaderName);
