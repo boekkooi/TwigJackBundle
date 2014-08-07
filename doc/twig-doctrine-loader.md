@@ -17,7 +17,7 @@ boekkooi_twig_jack:
 ```
 The above configuration will add a custom loader for any template that starts with `db://`.
 
-To make you loader be i18n compatible you can add the `locale_callable` that points to a service in the container.
+To make your loader i18n compatible, set the `locale_callable` option to a service id in the container.
 This service must return a callable that returns the locale string.
 
 Example
@@ -145,7 +145,7 @@ services:
         - @service_container
 ```
 
-Now we add the need configuration.
+Now we update the configuration.
 ```YAML
 # app/config/config.yml
 boekkooi_twig_jack:
@@ -158,10 +158,10 @@ boekkooi_twig_jack:
             locale_callable: 'my.current_locale_callable'
 ```
 
-Your done! Let's use it:
+You're done! Let's use it:
 
 ```PHP
-# Some controller or mailer or what ever
+# Some controller or mailer or whatever
 $this->container->get('templating')->render('db://my_template', array());
 ```
 
