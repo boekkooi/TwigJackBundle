@@ -30,6 +30,7 @@ First we create the required models:
 # My\Model\Template
 namespace My\Model;
 
+use Boekkooi\Bundle\TwigJackBundle\Model\TemplateInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
@@ -88,6 +89,7 @@ class Template implements TemplateInterface
 # My\Model\Template
 namespace My\Model;
 
+use Boekkooi\Bundle\TwigJackBundle\Model\TranslatableTemplateInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
@@ -95,7 +97,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Entity
  * @ORM\Table(name="my_template_translation")
  */
-class TemplateTranslation
+class TemplateTranslation implements TranslatableTemplateInterface
 {
     use ORMBehaviors\Timestampable\Timestampable,
         ORMBehaviors\Translatable\Translation;
