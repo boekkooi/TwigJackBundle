@@ -18,7 +18,7 @@ boekkooi_twig_jack:
 The above configuration will add a custom loader for any template that starts with `db://`.
 
 To make your loader i18n compatible, set the `locale_callable` option to a service id in the container.
-This service must return a callable that returns the locale string.
+This service must return a [callable](http://php.net/manual/en/language.types.callable.php) that when called returns a locale/string.
 
 Example
 -------------
@@ -30,15 +30,12 @@ First we create the required models:
 # My\Model\Template
 namespace My\Model;
 
-use Assert\Assertion;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="my_template")
- *
- * @method TemplateTranslation translate(string $locale=null)
  */
 class Template implements TemplateInterface
 {
@@ -91,7 +88,6 @@ class Template implements TemplateInterface
 # My\Model\Template
 namespace My\Model;
 
-use Assert\Assertion;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
@@ -135,6 +131,9 @@ class TemplateTranslation
     }
 }
 ```
+
+To add translation support to the templates we need to add a locale callable. 
+In this case we will be using [`Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable`](https://github.com/KnpLabs/DoctrineBehaviors/blob/master/src/Knp/DoctrineBehaviors/ORM/Translatable/CurrentLocaleCallable.php), this object implements [`__invoke`](http://php.net/manual/en/language.oop5.magic.php#object.invoke) to make it callable.
 
 Add the current locale callable to your services:
 ```
