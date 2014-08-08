@@ -27,7 +27,7 @@ class BoekkooiTwigJackExtension extends Extension
         $config = $processor->processConfiguration(new Configuration(), $config);
 
         if ($config['defer']['enabled']) {
-            $container->setParameter('boekkooi.twigjack.defer.prefix', $config['defer']['prefix']);
+            $container->setParameter('boekkooi.twig_jack.defer.prefix', $config['defer']['prefix']);
             $loader->load('defer.yml');
         }
 

@@ -31,8 +31,8 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->extension->load(array('boekkooi_twig_jack' => array()), $container);
 
-        $this->assertTrue($container->has('boekkooi.twigjack.defer.extension'));
-        $this->assertTrue($container->hasParameter('boekkooi.twigjack.defer.prefix'));
+        $this->assertTrue($container->has('boekkooi.twig_jack.defer.extension'));
+        $this->assertTrue($container->hasParameter('boekkooi.twig_jack.defer.prefix'));
         $this->assertTrue($container->hasParameter('templating.name_parser.class'));
         $this->assertEquals('Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser', $container->getParameter('templating.name_parser.class'));
     }
@@ -50,9 +50,9 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
             )),
             $container
         );
-        $this->assertTrue($container->has('boekkooi.twigjack.defer.extension'));
-        $this->assertTrue($container->hasParameter('boekkooi.twigjack.defer.prefix'));
-        $this->assertEquals('foo_bar', $container->getParameter('boekkooi.twigjack.defer.prefix'));
+        $this->assertTrue($container->has('boekkooi.twig_jack.defer.extension'));
+        $this->assertTrue($container->hasParameter('boekkooi.twig_jack.defer.prefix'));
+        $this->assertEquals('foo_bar', $container->getParameter('boekkooi.twig_jack.defer.prefix'));
 
         $this->assertTrue($container->hasParameter('templating.name_parser.class'));
         $this->assertEquals('Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser', $container->getParameter('templating.name_parser.class'));
@@ -68,7 +68,7 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
             $container
         );
 
-        $this->assertFalse($container->has('boekkooi.twigjack.defer.extension'));
+        $this->assertFalse($container->has('boekkooi.twig_jack.defer.extension'));
         $this->assertFalse($container->hasParameter('templating.name_parser.class'));
     }
 
@@ -82,8 +82,8 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
             $container
         );
 
-        $this->assertTrue($container->has('boekkooi.twigjack.defer.extension'));
-        $this->assertTrue($container->hasParameter('boekkooi.twigjack.defer.prefix'));
+        $this->assertTrue($container->has('boekkooi.twig_jack.defer.extension'));
+        $this->assertTrue($container->hasParameter('boekkooi.twig_jack.defer.prefix'));
     }
 
     /**
