@@ -4,7 +4,7 @@ Twig Jack Repository
 
 This repository hosts Twig Extensions and Template tweaks for the symfony 2 framework.
 
-Starting with version 1.1 BoekkooiTwigJackBundle will use [Semantic Versioning](http://semver.org/).
+BoekkooiTwigJackBundle is using [Semantic Versioning](http://semver.org/) starting with version 1.1.0.
 
 Fork this repository, add your extension, and request a pull.
 
