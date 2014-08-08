@@ -23,3 +23,7 @@ Use `{% extends "!@<bundle>" %}` to inherit from the root bundle. [more...](doc/
 [The Doctrine Loader](doc/twig-doctrine-loader.md)
 -------------
 Add one or multiple doctrine/database template loaders to twig with optional translation support. [more...](doc/twig-doctrine-loader.md)
+
+[Twig syntax constraint](doc/twig-syntax-validator.md)
+-------------
+Validate that a string is a valid twig template. [more...](doc/twig-syntax-validator.md)
