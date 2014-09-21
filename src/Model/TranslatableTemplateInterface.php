@@ -20,4 +20,4 @@ interface TranslatableTemplateInterface extends TemplateInterface
      * @param string $locale The current locale
      */
     public function setCurrentLocale($locale);
-} 
+}

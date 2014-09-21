@@ -67,4 +67,4 @@ class TwigSyntaxTest extends \PHPUnit_Framework_TestCase
         $constraint = new TwigSyntax();
         $this->assertEquals('TwigSyntaxValidator', $constraint->validatedBy());
     }
-} 
+}

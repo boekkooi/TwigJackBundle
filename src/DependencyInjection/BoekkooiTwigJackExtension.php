@@ -60,17 +60,18 @@ class BoekkooiTwigJackExtension extends Extension
 
         $loader
             ->replaceArgument(0, new Reference($repositoryService))
-            ->replaceArgument(1, (string)$loaderConfig['prefix'])
+            ->replaceArgument(1, (string) $loaderConfig['prefix'])
             ->replaceArgument(2, !empty($loaderConfig['locale_callable']) ? new Reference($loaderConfig['locale_callable']) : null);
     }
 
     private function createLoaderRepository(ContainerBuilder $container, $loaderName, array $loaderConfig)
     {
-        switch ($loaderConfig['type']){
+        switch ($loaderConfig['type']) {
             case 'custom':
                 if (empty($loaderConfig['repository'])) {
                     throw new InvalidConfigurationException(sprintf('No repository option provided for %s', $loaderName));
                 }
+
                 return $loaderConfig['repository'];
             case 'orm':
                 $managerService = 'doctrine';

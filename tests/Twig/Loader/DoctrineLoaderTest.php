@@ -157,7 +157,7 @@ class DoctrineLoaderTest extends \PHPUnit_Framework_TestCase
         $repo->expects($this->once())->method('find')
             ->with('templateName')->willReturn($template);
 
-        $loader = new DoctrineLoader($repo, 'x::', function() use ($callbackLocale) { return $callbackLocale; });
+        $loader = new DoctrineLoader($repo, 'x::', function () use ($callbackLocale) { return $callbackLocale; });
         $this->assertEquals($key, $loader->getCacheKey('x::templateName'));
     }
 

@@ -46,6 +46,7 @@ class TwigSyntaxValidator extends ConstraintValidator
         if ($env !== null) {
             return $env;
         }
+
         return $this->environment;
     }
-} 
+}

@@ -62,8 +62,10 @@ class DoctrineLoader implements \Twig_LoaderInterface
 
         if ($template instanceof TranslatableTemplateInterface) {
             /** @var TranslatableTemplateInterface $template */
+
             return $this->prefix . self::KEY_SEPARATOR . $template->getCurrentLocale() . self::KEY_SEPARATOR . $template->getIdentifier();
         }
+
         return $this->prefix . self::KEY_SEPARATOR . $template->getIdentifier();
     }
 

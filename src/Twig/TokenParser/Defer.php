@@ -57,6 +57,7 @@ class Defer extends Twig_TokenParser
             $name = $this->blockPrefix . $reference . $name;
             if ($this->parser->hasBlock($name)) {
                 $this->bodyParse($stream, $name);
+
                 return null;
             }
         } else {
@@ -120,6 +121,7 @@ class Defer extends Twig_TokenParser
             );
         }
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
+
         return $body;
     }
 }

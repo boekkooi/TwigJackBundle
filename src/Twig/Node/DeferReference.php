@@ -48,6 +48,7 @@ class DeferReference extends Twig_Node_BlockReference
                 ->outdent()
                 ->write("}\n")
             ;
+
             return;
         }
         if ($this->getAttribute('unique')) {
@@ -59,6 +60,7 @@ class DeferReference extends Twig_Node_BlockReference
                 ->outdent()
                 ->write("}\n")
             ;
+
             return;
         }
         $compiler

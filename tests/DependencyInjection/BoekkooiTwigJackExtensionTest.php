@@ -113,18 +113,18 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($loaderDef->hasTag('twig.loader'));
         $this->assertTrue($loaderDef->isPublic());
         $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(0));
-        $this->assertEquals($serviceRepo, (string)$loaderDef->getArgument(0));
+        $this->assertEquals($serviceRepo, (string) $loaderDef->getArgument(0));
         $this->assertEquals($options['prefix'], $loaderDef->getArgument(1));
         $this->assertNull($loaderDef->getArgument(2));
 
         // Check manager definition
         $repoDef = $container->getDefinition($serviceMan);
         $this->assertEquals($registryService, $repoDef->getFactoryService());
-        $this->assertEquals($options['model_class'], (string)$repoDef->getArgument(0));
+        $this->assertEquals($options['model_class'], (string) $repoDef->getArgument(0));
 
         // Check repo definition
         $repoDef = $container->getDefinition($serviceRepo);
-        $this->assertEquals($options['model_class'], (string)$repoDef->getArgument(0));
+        $this->assertEquals($options['model_class'], (string) $repoDef->getArgument(0));
 
         // We checked no lets make sure it compiles
         $container->setDefinition($registryService, new Definition('Doctrine\\Common\\Persistence\\ManagerRegistry'));
@@ -192,7 +192,7 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($loaderDef->hasTag('twig.loader'));
         $this->assertTrue($loaderDef->isPublic());
         $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(0));
-        $this->assertEquals('customrepo', (string)$loaderDef->getArgument(0));
+        $this->assertEquals('customrepo', (string) $loaderDef->getArgument(0));
         $this->assertEquals('', $loaderDef->getArgument(1));
         $this->assertNull($loaderDef->getArgument(2));
 
@@ -218,7 +218,7 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
         // Check loader definition
         $loaderDef = $container->getDefinition('boekkooi.twig_jack.loaders.custom');
         $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(2));
-        $this->assertEquals('x_y_z_callable', (string)$loaderDef->getArgument(2));
+        $this->assertEquals('x_y_z_callable', (string) $loaderDef->getArgument(2));
 
         // We checked no lets make sure it compiles
         $container->setDefinition('customRepo', new Definition('Doctrine\\Common\\Persistence\\ObjectRepository'));
@@ -281,7 +281,7 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
         /** @var \Symfony\Component\DependencyInjection\Reference $envReference */
         $envReference = $container->getDefinition('boekkooi.twig_jack.constraint_validator')->getArgument(0);
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $envReference);
-        $this->assertEquals($envServiceName, (string)$envReference);
+        $this->assertEquals($envServiceName, (string) $envReference);
     }
 
     public function getLoadConstraint()

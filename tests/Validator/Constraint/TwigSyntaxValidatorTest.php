@@ -129,6 +129,7 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
 
         $env->expects($this->never())->method('tokenize');
         $env->expects($this->never())->method('parse');
+
         return $env;
     }
 
@@ -150,4 +151,4 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
     {
         return $this->getMockBuilder('\\Twig_TokenStream')->disableOriginalConstructor()->getMock();
     }
-} 
+}
