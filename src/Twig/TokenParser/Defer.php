@@ -69,12 +69,10 @@ class Defer extends Twig_TokenParser
 
         $this->parser->setBlock($name, $block = new Node\Defer($name, new Twig_Node(array()), $lineno));
         $this->parser->pushLocalScope();
-        $this->parser->pushBlockStack($name);
 
         $body = $this->bodyParse($stream, $name);
 
         $block->setNode('body', $body);
-        $this->parser->popBlockStack();
         $this->parser->popLocalScope();
 
         return new Node\DeferReference($name, $variableName, $unique, $reference, $lineno, $this->getTag());
