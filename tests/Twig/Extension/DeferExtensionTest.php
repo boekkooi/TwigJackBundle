@@ -41,12 +41,24 @@ class DeferExtensionTest extends \PHPUnit_Framework_TestCase
         $res = $this->extension->retrieve('a');
         $this->assertInternalType('array', $res);
         $this->assertCount(3, $res);
-        $this->assertEquals(array('a' => 'c', 'c', 'c' => 'c'), $res);
+        $this->assertEquals(array('c', 'c', 'c'), $res);
 
         $res = $this->extension->retrieve('b');
         $this->assertInternalType('array', $res);
         $this->assertCount(2, $res);
-        $this->assertEquals(array('a' => 'c', 'b' => 'c'), $res);
+        $this->assertEquals(array('c', 'c'), $res);
+    }
+
+    public function testCacheAndRetrieveOrder()
+    {
+        $this->extension->cache('a', '0', 'a');
+        $this->extension->cache('a', '1', null, 0);
+        $this->extension->cache('a', '2', 'c', 1);
+
+        $res = $this->extension->retrieve('a');
+        $this->assertInternalType('array', $res);
+        $this->assertCount(3, $res);
+        $this->assertEquals(array('1', '2', '0'), $res);
     }
 
     public function testRetrieveClear()

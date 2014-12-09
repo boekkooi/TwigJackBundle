@@ -53,6 +53,9 @@ class Defer extends Twig_TokenParser
         $variableName = $stream->nextIf(\Twig_Token::NAME_TYPE);
         $variableName = $variableName !== null ? $variableName->getValue() : false;
 
+        $offset = $stream->nextIf(\Twig_Token::NUMBER_TYPE);
+        $offset = $offset !== null ? $offset->getValue() : false;
+
         if ($name) {
             $name = $this->blockPrefix . $reference . $name;
             if ($this->parser->hasBlock($name)) {
@@ -75,7 +78,7 @@ class Defer extends Twig_TokenParser
         $block->setNode('body', $body);
         $this->parser->popLocalScope();
 
-        return new Node\DeferReference($name, $variableName, $unique, $reference, $lineno, $this->getTag());
+        return new Node\DeferReference($name, $variableName, $unique, $reference, $offset, $lineno, $this->getTag());
     }
 
     public function decideBlockEnd(Twig_Token $token)

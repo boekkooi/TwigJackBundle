@@ -79,7 +79,7 @@ class DeferTest extends \PHPUnit_Framework_TestCase
 {% defer js %}X{% enddefer %}
 EOF
                 ,
-                new DeferReference('def_js0', false, false, 'js', 1, 'defer'),
+                new DeferReference('def_js0', false, false, 'js', null, 1, 'defer'),
                 new \Twig_Node(array(
                     'def_js0' => new \Twig_Node_Body(array(new DeferNode('def_js0', new \Twig_Node_Text('X', 1), 1)), array(), 1)
                 ))
@@ -90,8 +90,8 @@ EOF
 EOF
                 ,
                 new \Twig_Node(array(
-                    new DeferReference('def_js0', false, false, 'js', 1, 'defer'),
-                    new DeferReference('def_js1', false, false, 'js', 2, 'defer')
+                    new DeferReference('def_js0', false, false, 'js', null, 1, 'defer'),
+                    new DeferReference('def_js1', false, false, 'js', null, 2, 'defer')
                 ), array(), 1),
                 new \Twig_Node(array(
                     'def_js0' => new \Twig_Node_Body(array(new DeferNode('def_js0', new \Twig_Node_Text('X1', 1), 1)), array(), 1),
@@ -104,8 +104,8 @@ EOF
 EOF
                 ,
                 new \Twig_Node(array(
-                        new DeferReference('def_js0', 'x', false, 'js', 1, 'defer'),
-                        new DeferReference('def_js1', 'y', false, 'js', 2, 'defer')
+                        new DeferReference('def_js0', 'x', false, 'js', null, 1, 'defer'),
+                        new DeferReference('def_js1', 'y', false, 'js', null, 2, 'defer')
                     ), array(), 1),
                 new \Twig_Node(array(
                         'def_js0' => new \Twig_Node_Body(array(new DeferNode('def_js0', new \Twig_Node_Text('VAR X', 1), 1)), array(), 1),
@@ -119,13 +119,27 @@ EOF
 EOF
                 ,
                 new \Twig_Node(array(
-                        new DeferReference('def_jsx', false, true, 'js', 1, 'defer'),
-                        new DeferReference('def_jsy', false, true, 'js', 3, 'defer')
+                        new DeferReference('def_jsx', false, true, 'js', null, 1, 'defer'),
+                        new DeferReference('def_jsy', false, true, 'js', null, 3, 'defer')
                     ), array(), 1),
                 new \Twig_Node(array(
                         'def_jsx' => new \Twig_Node_Body(array(new DeferNode('def_jsx', new \Twig_Node_Text('UNIQUE X', 1), 1)), array(), 1),
                         'def_jsy' => new \Twig_Node_Body(array(new DeferNode('def_jsy', new \Twig_Node_Text('UNIQUE Y', 3), 3)), array(), 3)
                     ))
+            ),
+            array(<<<EOF
+{% defer js 'x' 1 %}order 1{% enddefer %}
+{% defer js 0 %}order 0{% enddefer %}
+EOF
+            ,
+                new \Twig_Node(array(
+                    new DeferReference('def_jsx', false, true, 'js', 1, 1, 'defer'),
+                    new DeferReference('def_js0', false, false, 'js', 0, 2, 'defer')
+                ), array(), 1),
+                new \Twig_Node(array(
+                    'def_jsx' => new \Twig_Node_Body(array(new DeferNode('def_jsx', new \Twig_Node_Text('order 1', 1), 1)), array(), 1),
+                    'def_js0' => new \Twig_Node_Body(array(new DeferNode('def_js0', new \Twig_Node_Text('order 0', 2), 2)), array(), 2)
+                ))
             )
         );
     }

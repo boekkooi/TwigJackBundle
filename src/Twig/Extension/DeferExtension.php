@@ -10,6 +10,8 @@ class DeferExtension extends \Twig_Extension
 {
     protected $references = array();
 
+    protected $subReferences = array();
+
     protected $deferBlockPrefix;
 
     public function __construct($deferBlockPrefix = '_defer_ref_')
@@ -36,21 +38,29 @@ class DeferExtension extends \Twig_Extension
         );
     }
 
-    public function cache($type, $content, $name = null)
+    public function cache($type, $content, $name = null, $offset = null)
     {
         if (!isset($this->references[$type])) {
             $this->references[$type] = array();
+            $this->subReferences[$type] = array();
         }
-        if ($name === null) {
+
+        if ($offset === null || $offset >= count($this->references[$type])) {
             $this->references[$type][] = $content;
+        } elseif ($offset <= 0) {
+            array_unshift($this->references[$type], $content);
         } else {
-            $this->references[$type][$name] = $content;
+            array_splice($this->references[$type], $offset, 0, $content);
+        }
+
+        if ($name !== null) {
+            $this->subReferences[$type][] = $name;
         }
     }
 
     public function contains($type, $name)
     {
-        return isset($this->references[$type]) && isset($this->references[$type][$name]);
+        return isset($this->subReferences[$type]) && in_array($name, $this->subReferences[$type], true);
     }
 
     public function retrieve($type, $clear = true)

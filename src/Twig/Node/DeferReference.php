@@ -19,13 +19,14 @@ class DeferReference extends Twig_Node_BlockReference
      * @param integer $lineno The line number
      * @param string $tag The tag name associated with the Node
      */
-    public function __construct($name, $variable, $unique, $reference, $lineno, $tag = null)
+    public function __construct($name, $variable, $unique, $reference, $offset, $lineno, $tag = null)
     {
         parent::__construct($name, $lineno, $tag);
 
         $this->setAttribute('reference', $reference);
         $this->setAttribute('unique', $unique);
         $this->setAttribute('variable', $variable);
+        $this->setAttribute('offset', $offset);
     }
 
     /**
@@ -38,13 +39,15 @@ class DeferReference extends Twig_Node_BlockReference
         $name = $this->getAttribute('name');
         $reference = $this->getAttribute('reference');
         $variable = $this->getAttribute('variable');
+        $offset = $this->getAttribute('offset');
+        $offset = ($offset === null || $offset === false || strval(intval($offset)) != $offset ? 'null' : $offset);
 
         if ($variable) {
             $compiler
                 ->addDebugInfo($this)
                 ->write("if (!\$this->env->getExtension('defer')->contains('{$reference}', '$name|' . \$context['{$variable}'])) {\n")
                 ->indent()
-                    ->write("\$this->env->getExtension('defer')->cache('{$reference}', \$this->renderBlock('{$name}', \$context, \$blocks), '$name|' . \$context['{$variable}']);\n")
+                    ->write("\$this->env->getExtension('defer')->cache('{$reference}', \$this->renderBlock('{$name}', \$context, \$blocks), '$name|' . \$context['{$variable}'], {$offset});\n")
                 ->outdent()
                 ->write("}\n")
             ;
@@ -56,7 +59,7 @@ class DeferReference extends Twig_Node_BlockReference
                 ->addDebugInfo($this)
                 ->write("if (!\$this->env->getExtension('defer')->contains('{$reference}', '{$name}')) {\n")
                 ->indent()
-                    ->write("\$this->env->getExtension('defer')->cache('{$reference}', \$this->renderBlock('{$name}', \$context, \$blocks), '{$name}');\n")
+                    ->write("\$this->env->getExtension('defer')->cache('{$reference}', \$this->renderBlock('{$name}', \$context, \$blocks), '{$name}', {$offset});\n")
                 ->outdent()
                 ->write("}\n")
             ;
@@ -65,7 +68,7 @@ class DeferReference extends Twig_Node_BlockReference
         }
         $compiler
             ->addDebugInfo($this)
-            ->write("\$this->env->getExtension('defer')->cache('{$reference}', \$this->renderBlock('{$name}', \$context, \$blocks));\n")
+            ->write("\$this->env->getExtension('defer')->cache('{$reference}', \$this->renderBlock('{$name}', \$context, \$blocks), null, {$offset});\n")
         ;
     }
 }
