@@ -64,10 +64,7 @@ class Defer extends Twig_TokenParser
                 return null;
             }
         } else {
-            $i = 0;
-            do {
-                $name = $this->blockPrefix . $reference . ($i++);
-            } while ($this->parser->hasBlock($name));
+            $name = $this->createUniqueBlockName($token, $reference);
         }
 
         $this->parser->setBlock($name, $block = new Node\Defer($name, new Twig_Node(array()), $lineno));
@@ -124,5 +121,25 @@ class Defer extends Twig_TokenParser
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         return $body;
+    }
+
+    /**
+     * @param Twig_Token $token
+     * @param $reference
+     * @return string
+     */
+    private function createUniqueBlockName(Twig_Token $token, $reference)
+    {
+        $name = $this->blockPrefix . $reference . sha1($this->parser->getFilename() . $token->getLine());
+        if (!$this->parser->hasBlock($name)) {
+            return $name;
+        }
+
+        $i = 0;
+        do {
+            $tmpName = $name . '_' . ($i++);
+        } while ($this->parser->hasBlock($tmpName));
+
+        return $tmpName;
     }
 }

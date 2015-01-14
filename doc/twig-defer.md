@@ -18,7 +18,7 @@ Example
 {{ defer('js') }}
 ```
 
-Output:
+Output:                                                                                                                                         
 ```html
 <p>Hello</p>
     <script src="1.js" />
