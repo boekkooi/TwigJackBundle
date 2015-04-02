@@ -103,7 +103,7 @@ class BoekkooiTwigJackExtension extends Extension
         // Create factory to get the repository for the entity
         $container
             ->setDefinition($repositoryService, new DefinitionDecorator('boekkooi.twig_jack.doctrine.object_repository.abstract'))
-            ->setFactoryService(new Reference($entityManagerService))
+            ->setFactoryService($entityManagerService)
             ->setArguments(array($modelClass));
 
         return $repositoryService;
