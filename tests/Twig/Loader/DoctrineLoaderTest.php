@@ -169,6 +169,9 @@ class DoctrineLoaderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Doctrine\Common\Persistence\ObjectRepository
+     */
     protected function getMockRepository()
     {
         return $this->getMock('Doctrine\\Common\\Persistence\\ObjectRepository');
