@@ -27,9 +27,6 @@ before_script:
   - mkdir -p build/logs
   # Ensure symfony & twig versions
   - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/framework-bundle=$SYMFONY_VERSION; fi;'
-  - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/twig-bundle=$SYMFONY_VERSION; fi;'
-  - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/yaml=$SYMFONY_VERSION; fi;'
-  - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/dependency-injection=$SYMFONY_VERSION; fi;'
 
   # Remove components are are not compatible with 5.3.3
   - sh -c 'if [  $(phpenv version-name) = "5.3.3" ]; then composer remove --no-update --dev -n fabpot/php-cs-fixer; fi;'

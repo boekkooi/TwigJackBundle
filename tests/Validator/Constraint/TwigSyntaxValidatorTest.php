@@ -138,7 +138,6 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
         $context = $this->getMock('\\Symfony\\Component\\Validator\\ExecutionContextInterface');
 
         if ($message !== false) {
-            $context = $this->getMock('\\Symfony\\Component\\Validator\\ExecutionContextInterface');
             $context->expects($this->once())->method('addViolation')->with($message, array('{{ value }}' => '"'.$template.'"'));
         } else {
             $context->expects($this->never())->method('addViolation')->withAnyParameters();

@@ -20,7 +20,7 @@
         "phpunit/phpunit": "~4.0",
         "fabpot/php-cs-fixer": "0.5.7",
 
-        "symfony/validator": "~2.1",
+        "symfony/validator": "~2.3, >=2.3.19",
         "doctrine/common": "~2.1"
     },
     "license": "MIT",
