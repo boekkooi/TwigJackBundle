@@ -17,7 +17,6 @@ services:
     public: false
     abstract: true
     class: %boekkooi.twig_jack.doctrine.object_manager.class%
-    factory_method: getManagerForClass
     arguments: [ ]
 
   # Abstract factory to retrieve the repository of a entity
@@ -25,5 +24,4 @@ services:
     public: false
     abstract: true
     class: %boekkooi.twig_jack.doctrine.object_repository.class%
-    factory_method: getRepository
     arguments: [ ]

@@ -43,15 +43,16 @@ class BoekkooiTwigJackExtension extends Extension
         }
 
         $configLoader->load('loader.yml');
+        $useFactoryMethod = method_exists($container->getDefinition('boekkooi.twig_jack.loader.abstract'), 'setFactory');
 
         foreach ($config['loaders'] as $name => $loader) {
-            $this->setupLoader($container, $name, $loader);
+            $this->setupLoader($container, $name, $loader, $useFactoryMethod);
         }
     }
 
-    private function setupLoader(ContainerBuilder $container, $name, array $loaderConfig)
+    private function setupLoader(ContainerBuilder $container, $name, array $loaderConfig, $useFactoryMethod)
     {
-        $repositoryService = $this->createLoaderRepository($container, $name, $loaderConfig);
+        $repositoryService = $this->createLoaderRepository($container, $name, $loaderConfig, $useFactoryMethod);
 
         // Create loader
         $loader = $container->setDefinition(sprintf('boekkooi.twig_jack.loaders.%s', $name), new DefinitionDecorator('boekkooi.twig_jack.loader.abstract'));
@@ -64,7 +65,7 @@ class BoekkooiTwigJackExtension extends Extension
             ->replaceArgument(2, !empty($loaderConfig['locale_callable']) ? new Reference($loaderConfig['locale_callable']) : null);
     }
 
-    private function createLoaderRepository(ContainerBuilder $container, $loaderName, array $loaderConfig)
+    private function createLoaderRepository(ContainerBuilder $container, $loaderName, array $loaderConfig, $useFactoryMethod)
     {
         switch ($loaderConfig['type']) {
             case 'custom':
@@ -97,14 +98,34 @@ class BoekkooiTwigJackExtension extends Extension
         $container
             ->setDefinition($entityManagerService, new DefinitionDecorator('boekkooi.twig_jack.doctrine.object_manager.abstract'))
             ->setPublic(true)
-            ->setFactoryService($managerService)
             ->setArguments(array($modelClass));
+        if ($useFactoryMethod) {
+            $container->getDefinition($entityManagerService)
+                ->setFactory(array(
+                    new Reference($managerService),
+                    'getManagerForClass'
+                ));
+        } else {
+            $container->getDefinition($entityManagerService)
+                ->setFactoryService($managerService)
+                ->setFactoryMethod('getManagerForClass');
+        }
 
         // Create factory to get the repository for the entity
         $container
             ->setDefinition($repositoryService, new DefinitionDecorator('boekkooi.twig_jack.doctrine.object_repository.abstract'))
-            ->setFactoryService($entityManagerService)
             ->setArguments(array($modelClass));
+        if ($useFactoryMethod) {
+            $container->getDefinition($repositoryService)
+                ->setFactory(array(
+                    new Reference($entityManagerService),
+                    'getRepository'
+                ));
+        } else {
+            $container->getDefinition($repositoryService)
+                ->setFactoryService($entityManagerService)
+                ->setFactoryMethod('getRepository');
+        }
 
         return $repositoryService;
     }
