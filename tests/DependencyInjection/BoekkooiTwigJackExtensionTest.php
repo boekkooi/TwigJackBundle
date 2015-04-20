@@ -4,6 +4,7 @@ namespace Tests\Boekkooi\Bundle\TwigJackBundle\DependencyInjection;
 use Boekkooi\Bundle\TwigJackBundle\DependencyInjection\BoekkooiTwigJackExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>
@@ -118,13 +119,30 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($loaderDef->getArgument(2));
 
         // Check manager definition
-        $repoDef = $container->getDefinition($serviceMan);
-        $this->assertEquals($registryService, $repoDef->getFactoryService());
-        $this->assertEquals($options['model_class'], (string) $repoDef->getArgument(0));
+        $managerDef = $container->getDefinition($serviceMan);
+        $this->assertEquals($options['model_class'], (string)$managerDef->getArgument(0));
+        if (method_exists($managerDef, 'setFactory')) {
+            $this->assertEquals(
+                array(new Reference($registryService), 'getManagerForClass'),
+                $managerDef->getFactory()
+            );
+        } else {
+            $this->assertEquals($registryService, $managerDef->getFactoryService());
+            $this->assertEquals('getManagerForClass', $managerDef->getFactoryMethod());
+        }
 
         // Check repo definition
         $repoDef = $container->getDefinition($serviceRepo);
         $this->assertEquals($options['model_class'], (string) $repoDef->getArgument(0));
+        if (method_exists($repoDef, 'setFactory')) {
+            $this->assertEquals(
+                array(new Reference($serviceMan), 'getRepository'),
+                $repoDef->getFactory()
+            );
+        } else {
+            $this->assertEquals($serviceMan, $repoDef->getFactoryService());
+            $this->assertEquals('getRepository', $repoDef->getFactoryMethod());
+        }
 
         // We checked no lets make sure it compiles
         $container->setDefinition($registryService, new Definition('Doctrine\\Common\\Persistence\\ManagerRegistry'));

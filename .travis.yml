@@ -2,26 +2,37 @@ language: php
 
 php: [5.3.3, 5.3, 5.4, 5.5, 5.6, hhvm]
 
-env:
-  - SYMFONY_VERSION=2.5.*
-
 matrix:
   fast_finish: true
   include:
-  - {php: 5.3.3, env: "SYMFONY_VERSION=2.1.* TWIG_VERSION=1.15"}
-  - {php: 5.5, env: "SYMFONY_VERSION=2.2.*"}
-  - {php: 5.5, env: "SYMFONY_VERSION=2.3.*"}
-  - {php: 5.5, env: "SYMFONY_VERSION=2.4.*"}
+  - php: 5.3.3
+    env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+  - php: 5.3
+    env: 'SYMFONY_VERSION=2.2.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+  - php: 5.3
+    env: 'SYMFONY_VERSION=2.3.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+  - php: 5.3
+    env: 'SYMFONY_VERSION=2.4.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+  - php: 5.3
+    env: 'SYMFONY_VERSION=2.5.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+  - php: 5.3
+    env: 'SYMFONY_VERSION=2.6.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
+  - php: 5.3
+    env: 'SYMFONY_VERSION=2.7.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
   allow_failures:
-  - {php: hhvm}
+  - php: hhvm
+  - php: 7.0
 
 before_script:
+  - mkdir -p build/logs
+  # Ensure symfony & twig versions
   - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/framework-bundle=$SYMFONY_VERSION; fi;'
   - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/twig-bundle=$SYMFONY_VERSION; fi;'
   - sh -c 'if [ "$TWIG_VERSION" != "" ]; then composer require --no-update twig/twig=$TWIG_VERSION; fi;'
+  # Remove components are are not compatible with 5.3.3
   - sh -c 'if [  $(phpenv version-name) = "5.3.3" ]; then composer remove --no-update --dev -n fabpot/php-cs-fixer; fi;'
-  - composer install --dev
-  - mkdir -p build/logs
+  # Install packages
+  - composer update ${COMPOSER_FLAGS} --no-interaction
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
