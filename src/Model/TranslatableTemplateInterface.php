@@ -1,7 +1,6 @@
 <?php
 namespace Boekkooi\Bundle\TwigJackBundle\Model;
 
-
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>
  */

@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Boekkooi\Bundle\TwigJackBundle\Validator\Constraint;
-use Boekkooi\Bundle\TwigJackBundle\Validator\Constraint\TwigSyntax;
 
+use Boekkooi\Bundle\TwigJackBundle\Validator\Constraint\TwigSyntax;
 
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>

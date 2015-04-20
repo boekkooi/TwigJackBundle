@@ -26,5 +26,4 @@ class Defer extends \Twig_Node_Block
             ->write("}\n\n")
         ;
     }
-
 }
