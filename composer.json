@@ -22,7 +22,7 @@
         "fabpot/php-cs-fixer": "1.6.2",
 
         "symfony/validator": "~2.3, >=2.3.19",
-        "doctrine/common": "~2.1"
+        "doctrine/common": "~2.1, >=2.1.4"
     },
     "license": "MIT",
     "authors": [

@@ -2,10 +2,10 @@
 namespace Tests\Boekkooi\Bundle\TwigJackBundle\Templating;
 
 use Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference as SymfonyTemplateReference;
 use Symfony\Bundle\FrameworkBundle\Tests\Templating\TemplateNameParserTest as ParentTemplateNameParserTest;
 use Symfony\Component\Templating\TemplateReference;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference as SymfonyTemplateReference;
 
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>
@@ -41,6 +41,7 @@ class TemplateNameParserTest extends ParentTemplateNameParserTest
         );
 
         // Based on the original
+        /** @var \Symfony\Component\HttpKernel\KernelInterface|\PHPUnit_Framework_MockObject_MockObject $kernel */
         $kernel = $this->getMock('Symfony\Component\HttpKernel\KernelInterface');
         $kernel
             ->expects($this->any())
