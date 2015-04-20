@@ -9,11 +9,11 @@ matrix:
     env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
   - php: 5.3
     env: 'SYMFONY_VERSION=2.3.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
-  - php: 5.3
+  - php: 5.5
     env: 'SYMFONY_VERSION=2.5.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
-  - php: 5.3
+  - php: 5.5
     env: 'SYMFONY_VERSION=2.6.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
-  - php: 5.3
+  - php: 5.5
     env: 'SYMFONY_VERSION=2.7.* COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
   allow_failures:
   - php: hhvm
@@ -23,9 +23,8 @@ before_script:
   - mkdir -p build/logs
   # Ensure symfony & twig versions
   - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --no-update symfony/framework-bundle=$SYMFONY_VERSION; fi;'
-
-  # Remove components are are not compatible with 5.3.3
-  - sh -c 'if [  $(phpenv version-name) = "5.3.3" ]; then composer remove --no-update --dev -n fabpot/php-cs-fixer; fi;'
+  # Remove fabpot/php-cs-fixer because it changes dependencies
+  - composer remove --no-update --dev -n fabpot/php-cs-fixer
   # Install packages
   - composer update ${COMPOSER_FLAGS} --no-interaction
 

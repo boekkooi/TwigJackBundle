@@ -17,8 +17,9 @@
         "symfony/validator": "Allows the twig constraint to be used"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.5",
-        "fabpot/php-cs-fixer": "0.5.7",
+        "phpunit/phpunit": "4.6.4",
+        "phpunit/phpunit-mock-objects": "2.3.1",
+        "fabpot/php-cs-fixer": "1.6.2",
 
         "symfony/validator": "~2.3, >=2.3.19",
         "doctrine/common": "~2.1"
