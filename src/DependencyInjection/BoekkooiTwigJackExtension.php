@@ -31,6 +31,7 @@ class BoekkooiTwigJackExtension extends Extension
 
         if ($config['exclamation']) {
             $loader->load('exclamation.yml');
+            $container->setParameter('boekkooi.twig_jack.exclamation', true);
         }
 
         $this->loadLoaders($container, $loader, $config);

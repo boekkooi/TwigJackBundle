@@ -9,6 +9,7 @@
         "symfony/twig-bundle": "~2.1",
         "symfony/yaml": "~2.1",
         "symfony/dependency-injection": "~2.1",
+        "symfony/finder": "~2.1",
 
         "twig/twig": "~1.15"
     },
