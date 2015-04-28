@@ -2,7 +2,7 @@
 namespace Boekkooi\Bundle\TwigJackBundle\Templating;
 
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser as BaseTemplateNameParser;
-use Symfony\Component\Templating\TemplateReference;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference as FrameworkTemplateReference;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
@@ -16,17 +16,21 @@ class TemplateNameParser extends BaseTemplateNameParser
             return $name;
         }
 
-        $enforce = $name[0] === '!';
-        $name = $enforce ? substr($name, 1) : $name;
+        // Not a override
+        if ($name[0] !== '!') {
+            return parent::parse($name);
+        }
 
         // normalize name (see TemplateNameParser line 52)
+        $name = substr($name, 1);
         $name = str_replace(':/', ':', preg_replace('#/{2,}#', '/', strtr($name, '\\', '/')));
         if (isset($this->cache['!' . $name])) {
             return $this->cache['!' . $name];
         }
 
+        // Get the parent reference
         $reference = parent::parse($name);
-        if (!$enforce) {
+        if (!$reference instanceof FrameworkTemplateReference) {
             return $reference;
         }
 
@@ -35,12 +39,13 @@ class TemplateNameParser extends BaseTemplateNameParser
             return $reference;
         }
 
+        // Resolve the base template path
         $path = $reference->getPath();
         $relativePath = substr($path, strlen($bundle) + 1);
 
         $bundles = $this->kernel->getBundle($bundle, false);
         $relativePath = end($bundles)->getPath() . $relativePath;
 
-        return $this->cache['!' . $name] = new TemplateReference($relativePath, $reference->get('engine'));
+        return $this->cache['!' . $name] = new TemplateReference($relativePath, $reference);
     }
 }

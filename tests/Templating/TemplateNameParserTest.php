@@ -2,10 +2,8 @@
 namespace Tests\Boekkooi\Bundle\TwigJackBundle\Templating;
 
 use Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference as SymfonyTemplateReference;
 use Symfony\Bundle\FrameworkBundle\Tests\Templating\TemplateNameParserTest as ParentTemplateNameParserTest;
 use Symfony\Component\Templating\TemplateReference;
-use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>
@@ -68,12 +66,13 @@ class TemplateNameParserTest extends ParentTemplateNameParserTest
     /**
      * @dataProvider getExclamationToTemplateProvider
      */
-    public function testExclamationParse($name, TemplateReferenceInterface $ref = null)
+    public function testExclamationParse($name, $path)
     {
         $template = $this->parser->parse($name);
 
-        $this->assertEquals($ref->getPath(), $template->getPath());
-        $this->assertEquals($ref->getLogicalName(), $template->getLogicalName());
+        $this->assertInstanceOf('Boekkooi\Bundle\TwigJackBundle\Templating\TemplateReference', $template);
+        $this->assertEquals($path, $template->getPath());
+        $this->assertEquals($name, $template->getLogicalName());
 
         // Test cache
         $this->assertEquals($template, $this->parser->parse($name));
@@ -82,9 +81,8 @@ class TemplateNameParserTest extends ParentTemplateNameParserTest
     public function getExclamationToTemplateProvider()
     {
         return array(
-            array('!OneLevelBundle:Post:index.html.php', new TemplateReference('/root/one/Resources/views/Post/index.html.php', 'php')),
-            array('!TwoLevelBundle:Post:index.html.php', new TemplateReference('/root/two/Resources/views/Post/index.html.php', 'php')),
-            array('!::layout.html.twig', new SymfonyTemplateReference('', '', 'layout', 'html', 'twig'))
+            array('!OneLevelBundle:Post:index.html.php', '/root/one/Resources/views/Post/index.html.php'),
+            array('!TwoLevelBundle:Post:index.html.php', '/root/two/Resources/views/Post/index.html.php'),
         );
     }
 }
