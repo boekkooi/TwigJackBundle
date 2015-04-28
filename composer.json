@@ -21,6 +21,7 @@
         "phpunit/phpunit": "4.6.4",
         "phpunit/phpunit-mock-objects": "2.3.1",
         "fabpot/php-cs-fixer": "1.6.2",
+        "kriswallsmith/assetic": "~1.2",
 
         "symfony/validator": "~2.3, >=2.3.19",
         "doctrine/common": "~2.1, >=2.1.4"

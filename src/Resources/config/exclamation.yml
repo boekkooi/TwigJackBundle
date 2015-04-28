@@ -1,3 +1,4 @@
 parameters:
   templating.name_parser.class: Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser
   templating.cache_warmer.template_paths.class: Boekkooi\Bundle\TwigJackBundle\CacheWarmer\TemplatePathsCacheWarmer
+  assetic.twig_formula_loader.class: Boekkooi\Bundle\TwigJackBundle\Assetic\TwigFormulaLoader
