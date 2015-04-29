@@ -26,6 +26,7 @@ before_script:
   # Remove fabpot/php-cs-fixer because it changes dependencies
   - composer remove --no-update --dev -n fabpot/php-cs-fixer
   # Install packages
+  - composer self-update
   - composer update ${COMPOSER_FLAGS} --no-interaction
 
 script:
