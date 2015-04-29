@@ -1,6 +1,7 @@
 <?php
 namespace Boekkooi\Bundle\TwigJackBundle\Assetic;
 
+use Assetic\Extension\Twig\AsseticFilterFunction;
 use Assetic\Extension\Twig\AsseticNode;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
 use Assetic\Factory\Resource\ResourceInterface;
