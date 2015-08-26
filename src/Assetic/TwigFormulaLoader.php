@@ -71,6 +71,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
                     $arguments[] = eval('return '.$this->twig->compile($argument).';');
                 }
 
+                /** @var \Assetic\Extension\Twig\AsseticFilterInvoker $invoker */
                 $invoker = $this->twig->getExtension('assetic')->getFilterInvoker($name);
 
                 $inputs  = isset($arguments[0]) ? (array) $arguments[0] : array();
@@ -98,7 +99,7 @@ class TwigFormulaLoader implements FormulaLoaderInterface
         }
 
         // We need to also check the parent since else it won't get parsed
-        if($node->hasNode('parent') && $node->getNode('parent') instanceof \Twig_Node_Expression_Constant) {
+        if ($node->hasNode('parent') && $node->getNode('parent') instanceof \Twig_Node_Expression_Constant) {
             $parent = $node->getNode('parent')->getAttribute('value');
             if ($parent[0] === '!') {
                 $source = $this->twig->getLoader()->getSource($parent);

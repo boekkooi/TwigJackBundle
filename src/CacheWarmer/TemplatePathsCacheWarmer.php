@@ -32,6 +32,7 @@ class TemplatePathsCacheWarmer extends BaseTemplatePathsCacheWarmer
     {
         $templates = array();
 
+        /** @var \Symfony\Component\Templating\TemplateReferenceInterface $template */
         foreach ($this->finder->findAllTemplates() as $template) {
             $templates[$template->getLogicalName()] = $this->locator->locate($template);
 

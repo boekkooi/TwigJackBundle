@@ -16,6 +16,7 @@ class DeferReference extends Twig_Node_BlockReference
      * @param string|false $variable
      * @param boolean $unique
      * @param string $reference
+     * @param int|null $offset
      * @param integer $lineno The line number
      * @param string $tag The tag name associated with the Node
      */

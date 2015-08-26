@@ -1,8 +1,8 @@
 <?php
 namespace Tests\Boekkooi\Bundle\TwigJackBundle\Twig\TokenParser;
 
-use Boekkooi\Bundle\TwigJackBundle\Twig\Node\DeferReference;
 use Boekkooi\Bundle\TwigJackBundle\Twig\Node\Defer as DeferNode;
+use Boekkooi\Bundle\TwigJackBundle\Twig\Node\DeferReference;
 use Boekkooi\Bundle\TwigJackBundle\Twig\TokenParser\Defer;
 
 /**
@@ -19,7 +19,7 @@ class DeferTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->env = new \Twig_Environment(
-            new \Twig_Loader_String(),
+            new \Twig_Loader_Array([]),
             array('cache' => false, 'autoescape' => false, 'optimizations' => 0)
         );
     }

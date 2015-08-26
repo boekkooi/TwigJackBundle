@@ -5,13 +5,13 @@
     "description": "Handy additional features for Twig within symfony 2",
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": "~2.1",
-        "symfony/twig-bundle": "~2.1",
-        "symfony/yaml": "~2.1",
-        "symfony/dependency-injection": "~2.1",
-        "symfony/finder": "~2.1",
+        "symfony/framework-bundle": "~2.3",
+        "symfony/twig-bundle": "~2.3",
+        "symfony/yaml": "~2.3",
+        "symfony/dependency-injection": "~2.3",
+        "symfony/finder": "~2.3",
 
-        "twig/twig": "~1.15"
+        "twig/twig": "~1.15|~2.0"
     },
     "suggest": {
         "doctrine/common": "Needed to use the twig doctrine loader functionality.",
@@ -24,7 +24,7 @@
         "kriswallsmith/assetic": "~1.2",
 
         "symfony/validator": "~2.3, >=2.3.19",
-        "doctrine/common": "~2.1, >=2.1.4"
+        "doctrine/common": "~2.2"
     },
     "license": "MIT",
     "authors": [
@@ -41,6 +41,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\Boekkooi\\Bundle\\TwigJackBundle\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.4-dev"
         }
     },
     "minimum-stability": "dev"

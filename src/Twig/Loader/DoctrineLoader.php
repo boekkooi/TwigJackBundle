@@ -46,7 +46,7 @@ class DoctrineLoader implements \Twig_LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getSource($name)
     {
@@ -54,7 +54,21 @@ class DoctrineLoader implements \Twig_LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     */
+    public function exists($name)
+    {
+        if ($this->isLoadableTemplate($name)) {
+            $templateIdentifier = substr($name, strlen($this->prefix));
+            $template = $this->repository->find($templateIdentifier);
+
+            return $template !== null && $template instanceof TemplateInterface;
+        }
+        return false;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getCacheKey($name)
     {
@@ -70,7 +84,7 @@ class DoctrineLoader implements \Twig_LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isFresh($name, $time)
     {
