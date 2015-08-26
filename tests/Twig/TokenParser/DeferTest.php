@@ -19,7 +19,7 @@ class DeferTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->env = new \Twig_Environment(
-            new \Twig_Loader_Array([]),
+            new \Twig_Loader_Array(array()),
             array('cache' => false, 'autoescape' => false, 'optimizations' => 0)
         );
     }
