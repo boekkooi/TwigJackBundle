@@ -19,6 +19,8 @@ matrix:
   - php: hhvm
   - php: 7.0
 
+sudo: false
+
 before_script:
   - mkdir -p build/logs
   # Ensure symfony & twig versions
