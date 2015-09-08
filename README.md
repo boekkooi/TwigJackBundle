@@ -1,6 +1,13 @@
 Twig Jack Repository
 =============
-[![Build Status](https://travis-ci.org/boekkooi/TwigJackBundle.svg?branch=master)](https://travis-ci.org/boekkooi/TwigJackBundle)[![Code Coverage](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/?branch=master)[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/?branch=master)[![Total Downloads](https://poser.pugx.org/boekkooi/twig-jack-bundle/downloads.svg)](https://packagist.org/packages/boekkooi/twig-jack-bundle)[![Latest Stable Version](https://poser.pugx.org/boekkooi/twig-jack-bundle/v/stable.svg)](https://packagist.org/packages/boekkooi/twig-jack-bundle)[![License](https://poser.pugx.org/boekkooi/twig-jack-bundle/license.svg)](https://packagist.org/packages/boekkooi/twig-jack-bundle)[![SensioLabsInsight](https://insight.sensiolabs.com/projects/53a6e635-78ef-4c6c-be8d-760e978839ff/mini.png)](https://insight.sensiolabs.com/projects/53a6e635-78ef-4c6c-be8d-760e978839ff)
+[![Build Status](https://travis-ci.org/boekkooi/TwigJackBundle.svg?branch=master)](https://travis-ci.org/boekkooi/TwigJackBundle)
+[![Code Coverage](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/boekkooi/TwigJackBundle/?branch=master)
+[![Total Downloads](https://poser.pugx.org/boekkooi/twig-jack-bundle/downloads.svg)](https://packagist.org/packages/boekkooi/twig-jack-bundle)
+[![Latest Stable Version](https://poser.pugx.org/boekkooi/twig-jack-bundle/v/stable.svg)](https://packagist.org/packages/boekkooi/twig-jack-bundle)
+[![License](https://poser.pugx.org/boekkooi/twig-jack-bundle/license.svg)](https://packagist.org/packages/boekkooi/twig-jack-bundle)
+[![Reference Status](https://www.versioneye.com/php/boekkooi:twig-jack-bundle/reference_badge.svg?style=flat)](https://www.versioneye.com/php/boekkooi:twig-jack-bundle/references)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/53a6e635-78ef-4c6c-be8d-760e978839ff/mini.png)](https://insight.sensiolabs.com/projects/53a6e635-78ef-4c6c-be8d-760e978839ff)
 
 This repository hosts Twig Extensions and Template tweaks for the symfony 2 framework.
 
