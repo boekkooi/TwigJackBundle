@@ -2,90 +2,124 @@
 namespace Tests\Boekkooi\Bundle\TwigJackBundle\DependencyInjection;
 
 use Boekkooi\Bundle\TwigJackBundle\DependencyInjection\BoekkooiTwigJackExtension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Bundle\AsseticBundle\DependencyInjection\AsseticExtension;
+use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Warnar Boekkooi <warnar@boekkooi.net>
  */
-class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
+class BoekkooiTwigJackExtensionTest extends AbstractExtensionTestCase
 {
     /**
-     * @var BoekkooiTwigJackExtension
+     * @inheritdoc
      */
-    protected $extension;
-
-    protected function setUp()
+    public function setUp()
     {
-        $this->extension = new BoekkooiTwigJackExtension();
+        parent::setUp();
+
+        $this->container->setParameter('kernel.debug', false);
+        $this->container->setParameter('kernel.root_dir', sys_get_temp_dir() . '/BoekkooiTwigJackBundle/');
+        $this->container->setParameter('kernel.cache_dir', sys_get_temp_dir() . '/BoekkooiTwigJackBundle/cache');
+        $this->container->setParameter('kernel.bundles', array());
     }
 
-    protected function tearDown()
+    /**
+     * @inheritdoc
+     */
+    protected function getContainerExtensions()
     {
-        $this->extension = null;
+        return array(
+            new FrameworkExtension(),
+            new AsseticExtension(),
+            new BoekkooiTwigJackExtension()
+        );
     }
 
-    public function testLoad()
+    /**
+     * @inheritdoc
+     */
+    protected function load(array $configurationValues = array())
     {
-        $container = new ContainerBuilder();
+        $minimalConfiguration = $this->getMinimalConfiguration();
 
-        $this->extension->load(array('boekkooi_twig_jack' => array()), $container);
+        foreach ($this->container->getExtensions() as $extension) {
+            $extensionConfig = array(
+                (isset($minimalConfiguration[$extension->getAlias()]) ? $minimalConfiguration[$extension->getAlias()] : array()),
+                (isset($configurationValues[$extension->getAlias()]) ? $configurationValues[$extension->getAlias()] : array())
+            );
 
-        $this->assertTrue($container->has('boekkooi.twig_jack.defer.extension'));
-        $this->assertFalse($container->has('boekkooi.twig_jack.constraint_validator'));
-        $this->assertTrue($container->hasParameter('boekkooi.twig_jack.defer.prefix'));
-        $this->assertTrue($container->hasParameter('templating.name_parser.class'));
-        $this->assertEquals('Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser', $container->getParameter('templating.name_parser.class'));
+            $extension->load($extensionConfig, $this->container);
+        }
+    }
+
+    protected function getMinimalConfiguration()
+    {
+        return array(
+            'framework' => array(
+                'templating' => array(
+                    'engine' => 'twig'
+                )
+            )
+        );
+    }
+
+    public function testDefaults()
+    {
+        $this->load();
+
+        $this->assertContainerBuilderHasService('boekkooi.twig_jack.defer.extension');
+        $this->assertContainerBuilderNotHasService('boekkooi.twig_jack.constraint_validator');
+        $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.defer.prefix');
+
+        $this->assertContainerBuilderHasService('templating.name_parser', 'Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser');
+        $this->assertContainerBuilderHasService('templating.cache_warmer.template_paths', 'Boekkooi\Bundle\TwigJackBundle\CacheWarmer\TemplatePathsCacheWarmer');
+        $this->assertContainerBuilderHasService('assetic.twig_formula_loader', 'Boekkooi\Bundle\TwigJackBundle\Assetic\TwigFormulaLoader');
     }
 
     public function testLoadEnabled()
     {
-        $container = new ContainerBuilder();
-
-        $this->extension->load(array('boekkooi_twig_jack' => array(
+        $this->load(array(
+            'boekkooi_twig_jack' => array(
                 'defer' => array(
                     'enabled' => true,
                     'prefix' => 'foo_bar'
                 ),
                 'exclamation' => true
-            )),
-            $container
-        );
-        $this->assertTrue($container->has('boekkooi.twig_jack.defer.extension'));
-        $this->assertTrue($container->hasParameter('boekkooi.twig_jack.defer.prefix'));
-        $this->assertEquals('foo_bar', $container->getParameter('boekkooi.twig_jack.defer.prefix'));
+            )
+        ));
+        $this->assertContainerBuilderHasService('boekkooi.twig_jack.defer.extension');
+        $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.defer.prefix', 'foo_bar');
 
-        $this->assertTrue($container->hasParameter('templating.name_parser.class'));
-        $this->assertEquals('Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser', $container->getParameter('templating.name_parser.class'));
+        $this->assertContainerBuilderHasService('templating.name_parser', 'Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser');
     }
 
     public function testLoadDisabled()
     {
-        $container = new ContainerBuilder();
-        $this->extension->load(array('boekkooi_twig_jack' => array(
+        $this->load(array(
+            'boekkooi_twig_jack' => array(
                 'defer' => false,
                 'exclamation' => false
-            )),
-            $container
-        );
+            )
+        ));
 
-        $this->assertFalse($container->has('boekkooi.twig_jack.defer.extension'));
-        $this->assertFalse($container->hasParameter('templating.name_parser.class'));
+        $this->assertContainerBuilderNotHasService('boekkooi.twig_jack.defer.extension');
+        $this->assertContainerBuilderHasService('templating.name_parser', 'Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser');
     }
 
     public function testLoadDeferTrue()
     {
-        $container = new ContainerBuilder();
-        $this->extension->load(array('boekkooi_twig_jack' => array(
+        $this->load(array(
+            'boekkooi_twig_jack' => array(
                 'defer' => true,
                 'exclamation' => false
-            )),
-            $container
-        );
+            )
+        ));
 
-        $this->assertTrue($container->has('boekkooi.twig_jack.defer.extension'));
-        $this->assertTrue($container->hasParameter('boekkooi.twig_jack.defer.prefix'));
+        $this->assertContainerBuilderHasService('boekkooi.twig_jack.defer.extension');
+        $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.defer.prefix');
     }
 
     /**
@@ -93,60 +127,61 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoaderDoctrine($name, $options, $registryService)
     {
-        $container = new ContainerBuilder();
-        $this->extension->load(array('boekkooi_twig_doctrine_template' => array(
-            'loaders' => array(
-                $name => $options
+        $this->load(array(
+            'boekkooi_twig_jack' => array(
+                'loaders' => array(
+                    $name => $options
+                )
             )
-        )), $container);
+        ));
 
         $service = 'boekkooi.twig_jack.loaders.' . $name;
         $serviceMan = $service . '.object_manager';
         $serviceRepo = $service . '.object_repository';
 
         // Check if services where created
-        $this->assertTrue($container->has($service));
-        $this->assertTrue($container->has($serviceMan));
-        $this->assertTrue($container->has($serviceRepo));
+        $this->assertContainerBuilderHasService($service);
+        $this->assertContainerBuilderHasService($serviceMan);
+        $this->assertContainerBuilderHasService($serviceRepo);
 
         // Check loader definition
-        $loaderDef = $container->getDefinition($service);
-        $this->assertTrue($loaderDef->hasTag('twig.loader'));
-        $this->assertTrue($loaderDef->isPublic());
-        $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(0));
-        $this->assertEquals($serviceRepo, (string) $loaderDef->getArgument(0));
-        $this->assertEquals($options['prefix'], $loaderDef->getArgument(1));
-        $this->assertNull($loaderDef->getArgument(2));
+        $loaderDef = $this->container->getDefinition($service);
+        self::assertTrue($loaderDef->hasTag('twig.loader'));
+        self::assertTrue($loaderDef->isPublic());
+        self::assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(0));
+        self::assertEquals($serviceRepo, (string) $loaderDef->getArgument(0));
+        self::assertEquals($options['prefix'], $loaderDef->getArgument(1));
+        self::assertNull($loaderDef->getArgument(2));
 
         // Check manager definition
-        $managerDef = $container->getDefinition($serviceMan);
-        $this->assertEquals($options['model_class'], (string)$managerDef->getArgument(0));
+        $managerDef = $this->container->getDefinition($serviceMan);
+        self::assertEquals($options['model_class'], (string)$managerDef->getArgument(0));
         if (method_exists($managerDef, 'setFactory')) {
-            $this->assertEquals(
+            self::assertEquals(
                 array(new Reference($registryService), 'getManagerForClass'),
                 $managerDef->getFactory()
             );
         } else {
-            $this->assertEquals($registryService, $managerDef->getFactoryService());
-            $this->assertEquals('getManagerForClass', $managerDef->getFactoryMethod());
+            self::assertEquals($registryService, $managerDef->getFactoryService());
+            self::assertEquals('getManagerForClass', $managerDef->getFactoryMethod());
         }
 
         // Check repo definition
-        $repoDef = $container->getDefinition($serviceRepo);
-        $this->assertEquals($options['model_class'], (string) $repoDef->getArgument(0));
+        $repoDef = $this->container->getDefinition($serviceRepo);
+        self::assertEquals($options['model_class'], (string) $repoDef->getArgument(0));
         if (method_exists($repoDef, 'setFactory')) {
-            $this->assertEquals(
+            self::assertEquals(
                 array(new Reference($serviceMan), 'getRepository'),
                 $repoDef->getFactory()
             );
         } else {
-            $this->assertEquals($serviceMan, $repoDef->getFactoryService());
-            $this->assertEquals('getRepository', $repoDef->getFactoryMethod());
+            self::assertEquals($serviceMan, $repoDef->getFactoryService());
+            self::assertEquals('getRepository', $repoDef->getFactoryMethod());
         }
 
         // We checked no lets make sure it compiles
-        $container->setDefinition($registryService, new Definition('Doctrine\\Common\\Persistence\\ManagerRegistry'));
-        $container->compile();
+        $this->container->setDefinition($registryService, new Definition('Doctrine\\Common\\Persistence\\ManagerRegistry'));
+        $this->container->compile();
     }
 
     public function getLoadersDoctrine()
@@ -184,64 +219,66 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testLoaderCustom()
     {
-        $container = new ContainerBuilder();
-        $this->extension->load(array('boekkooi_twig_doctrine_template' => array(
-            'loaders' => array(
-                'custom' => array(
-                    'prefix' => '',
-                    'type' => 'custom',
-                    'repository' => 'customRepo',
-                    'model_class' => 'stdClass'
+        $this->load(array(
+            'boekkooi_twig_jack' => array(
+                'loaders' => array(
+                    'custom' => array(
+                        'prefix' => '',
+                        'type' => 'custom',
+                        'repository' => 'customRepo',
+                        'model_class' => 'stdClass'
+                    )
                 )
             )
-        )), $container);
+        ));
 
         $service = 'boekkooi.twig_jack.loaders.custom';
         $serviceMan = $service . '.object_manager';
         $serviceRepo = $service . '.object_repository';
 
         // Check if services where created
-        $this->assertTrue($container->has($service));
-        $this->assertFalse($container->has($serviceMan));
-        $this->assertFalse($container->has($serviceRepo));
+        $this->assertContainerBuilderHasService($service);
+        $this->assertContainerBuilderNotHasService($serviceMan);
+        $this->assertContainerBuilderNotHasService($serviceRepo);
 
         // Check loader definition
-        $loaderDef = $container->getDefinition($service);
-        $this->assertTrue($loaderDef->hasTag('twig.loader'));
-        $this->assertTrue($loaderDef->isPublic());
-        $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(0));
-        $this->assertEquals('customrepo', (string) $loaderDef->getArgument(0));
-        $this->assertEquals('', $loaderDef->getArgument(1));
-        $this->assertNull($loaderDef->getArgument(2));
+        $loaderDef = $this->container->getDefinition($service);
+        self::assertTrue($loaderDef->hasTag('twig.loader'));
+        self::assertTrue($loaderDef->isPublic());
+        self::assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(0));
+        self::assertEquals('customrepo', (string) $loaderDef->getArgument(0));
+        self::assertEquals('', $loaderDef->getArgument(1));
+        self::assertNull($loaderDef->getArgument(2));
 
         // We checked no lets make sure it compiles
-        $container->setDefinition('customRepo', new Definition('Doctrine\\Common\\Persistence\\ObjectRepository'));
-        $container->compile();
+        $this->container->setDefinition('customRepo', new Definition('Doctrine\\Common\\Persistence\\ObjectRepository'));
+        $this->container->compile();
     }
 
     public function testLoaderLocale()
     {
-        $container = new ContainerBuilder();
-        $this->extension->load(array('boekkooi_twig_doctrine_template' => array(
-            'loaders' => array(
-                'custom' => array(
-                    'prefix' => '',
-                    'type' => 'orm',
-                    'model_class' => 'stdClass',
-                    'locale_callable' => 'x_y_z_callable'
+        $this->load(array(
+            'boekkooi_twig_jack' => array(
+                'loaders' => array(
+                    'custom' => array(
+                        'prefix' => '',
+                        'type' => 'orm',
+                        'model_class' => 'stdClass',
+                        'locale_callable' => 'x_y_z_callable'
+                    )
                 )
             )
-        )), $container);
+        ));
 
         // Check loader definition
-        $loaderDef = $container->getDefinition('boekkooi.twig_jack.loaders.custom');
-        $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(2));
-        $this->assertEquals('x_y_z_callable', (string) $loaderDef->getArgument(2));
+        $loaderDef = $this->container->getDefinition('boekkooi.twig_jack.loaders.custom');
+        self::assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $loaderDef->getArgument(2));
+        self::assertEquals('x_y_z_callable', (string) $loaderDef->getArgument(2));
 
         // We checked no lets make sure it compiles
-        $container->setDefinition('customRepo', new Definition('Doctrine\\Common\\Persistence\\ObjectRepository'));
-        $container->setDefinition('x_y_z_callable', new Definition('stdClass'));
-        $container->compile();
+        $this->container->setDefinition('customRepo', new Definition('Doctrine\\Common\\Persistence\\ObjectRepository'));
+        $this->container->setDefinition('x_y_z_callable', new Definition('stdClass'));
+        $this->container->compile();
     }
 
     /**
@@ -250,12 +287,13 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoaderInvalid($options)
     {
-        $container = new ContainerBuilder();
-        $this->extension->load(array('boekkooi_twig_doctrine_template' => array(
-            'loaders' => array(
-                'invalid' => $options
+        $this->load(array(
+            'boekkooi_twig_jack' => array(
+                'loaders' => array(
+                    'invalid' => $options
+                )
             )
-        )), $container);
+        ));
     }
 
     public function getLoadersInvalid()
@@ -291,15 +329,14 @@ class BoekkooiTwigJackExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadConstraint($options, $envServiceName)
     {
-        $container = new ContainerBuilder();
-        $this->extension->load(array('boekkooi_twig_jack' => $options), $container);
+        $this->load(array('boekkooi_twig_jack' => $options));
 
-        $this->assertTrue($container->has('boekkooi.twig_jack.constraint_validator'));
+        $this->assertContainerBuilderHasService('boekkooi.twig_jack.constraint_validator');
 
         /** @var \Symfony\Component\DependencyInjection\Reference $envReference */
-        $envReference = $container->getDefinition('boekkooi.twig_jack.constraint_validator')->getArgument(0);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $envReference);
-        $this->assertEquals($envServiceName, (string) $envReference);
+        $envReference = $this->container->getDefinition('boekkooi.twig_jack.constraint_validator')->getArgument(0);
+        self::assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $envReference);
+        self::assertEquals($envServiceName, (string) $envReference);
     }
 
     public function getLoadConstraint()

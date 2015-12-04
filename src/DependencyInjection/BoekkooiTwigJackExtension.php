@@ -28,11 +28,7 @@ class BoekkooiTwigJackExtension extends Extension
 
         $this->loadDefer($container, $loader, $config);
         $this->loadConstraint($container, $loader, $config);
-
-        if ($config['exclamation']) {
-            $loader->load('exclamation.yml');
-            $container->setParameter('boekkooi.twig_jack.exclamation', true);
-        }
+        $this->loadExclamation($container, $loader, $config);
 
         $this->loadLoaders($container, $loader, $config);
     }
@@ -150,5 +146,31 @@ class BoekkooiTwigJackExtension extends Extension
         $loader->load('constraint.yml');
         $container->getDefinition('boekkooi.twig_jack.constraint_validator')
             ->replaceArgument(0, new Reference($config['constraint']['environment']));
+    }
+
+    /**
+     * @param array $config
+     * @param ContainerBuilder $container
+     * @param $loader
+     */
+    public function loadExclamation(ContainerBuilder $container, $loader, array $config)
+    {
+        if (!$config['exclamation']) {
+            return;
+        }
+
+        $loader->load('exclamation.yml');
+
+        $container->getDefinition('templating.name_parser')
+            ->setClass('%templating.name_parser.class%');
+
+        $container->getDefinition('templating.cache_warmer.template_paths')
+            ->setClass('%templating.cache_warmer.template_paths.class%');
+
+        $container->getDefinition('assetic.twig_formula_loader')
+            ->setClass('%assetic.twig_formula_loader.class%');
+
+
+        $container->setParameter('boekkooi.twig_jack.exclamation', true);
     }
 }

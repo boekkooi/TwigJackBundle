@@ -15,7 +15,11 @@ class ExclamationPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('templating.cache_warmer.template_paths') || !$container->hasParameter('boekkooi.twig_jack.exclamation') || !$container->getParameter('boekkooi.twig_jack.exclamation')) {
+        if (
+            !$container->hasDefinition('templating.cache_warmer.template_paths') ||
+            !$container->hasParameter('boekkooi.twig_jack.exclamation') ||
+            !$container->getParameter('boekkooi.twig_jack.exclamation')
+        ) {
             return;
         }
 
