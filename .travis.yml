@@ -26,7 +26,6 @@ matrix:
       COMPOSER_FLAGS="--prefer-stable --prefer-lowest"
   allow_failures:
   - php: hhvm
-  - php: 7.0
 
 sudo: false
 
