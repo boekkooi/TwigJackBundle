@@ -15,20 +15,20 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
     {
         $node = new DeferReference('foo', 'my_var', false, 'bar', null, 1);
 
-        $this->assertEquals('foo', $node->getAttribute('name'));
-        $this->assertEquals('bar', $node->getAttribute('reference'));
-        $this->assertEquals(false, $node->getAttribute('unique'));
-        $this->assertEquals(false, $node->getAttribute('offset'));
-        $this->assertEquals('my_var', $node->getAttribute('variable'));
+        self::assertEquals('foo', $node->getAttribute('name'));
+        self::assertEquals('bar', $node->getAttribute('reference'));
+        self::assertEquals(false, $node->getAttribute('unique'));
+        self::assertEquals(false, $node->getAttribute('offset'));
+        self::assertEquals('my_var', $node->getAttribute('variable'));
     }
 
     /**
      * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\DeferReference::compile
      * @dataProvider getTests
      */
-    public function testCompile($node, $source, $environment = null)
+    public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
-        parent::testCompile($node, $source, $environment);
+        parent::testCompile($node, $source, $environment, $isPattern);
     }
 
     public function getTests()

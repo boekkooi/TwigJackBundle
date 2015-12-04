@@ -16,17 +16,17 @@ class DeferTest extends \Twig_Test_NodeTestCase
         $bodyNode = new \Twig_Node_Body();
         $node = new Defer('foo', $bodyNode, 1);
 
-        $this->assertEquals('foo', $node->getAttribute('name'));
-        $this->assertEquals($bodyNode, $node->getNode('body'));
+        self::assertEquals('foo', $node->getAttribute('name'));
+        self::assertEquals($bodyNode, $node->getNode('body'));
     }
 
     /**
      * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\Defer::compile
      * @dataProvider getTests
      */
-    public function testCompile($node, $source, $environment = null)
+    public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
-        parent::testCompile($node, $source, $environment);
+        parent::testCompile($node, $source, $environment, $isPattern);
     }
 
     public function getTests()

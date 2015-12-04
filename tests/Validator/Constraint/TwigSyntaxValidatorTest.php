@@ -16,8 +16,8 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
         $templateStream = $this->getMockTokenStream();
 
         $env = $this->getMockEnvironment();
-        $env->expects($this->once())->method('tokenize')->with($template)->willReturn($templateStream);
-        $env->expects($this->once())->method('parse')->with($templateStream);
+        $env->expects(self::once())->method('tokenize')->with($template)->willReturn($templateStream);
+        $env->expects(self::once())->method('parse')->with($templateStream);
 
         $validator = new TwigSyntaxValidator($env);
         $validator->initialize($this->getMockContext());
@@ -30,8 +30,8 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
         $template = '{{ variable }}';
 
         $env = $this->getMockEnvironment();
-        $env->expects($this->never())->method('parse')->withAnyParameters();
-        $env->expects($this->once())->method('tokenize')->with($template)
+        $env->expects(self::never())->method('parse')->withAnyParameters();
+        $env->expects(self::once())->method('tokenize')->with($template)
             ->willThrowException(new \Twig_Error_Syntax('error'));
 
         $validator = new TwigSyntaxValidator($env);
@@ -47,8 +47,8 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
         $templateStream = $this->getMockTokenStream();
 
         $env = $this->getMockEnvironment();
-        $env->expects($this->once())->method('tokenize')->with($template)->willReturn($templateStream);
-        $env->expects($this->once())->method('parse')->with($templateStream)
+        $env->expects(self::once())->method('tokenize')->with($template)->willReturn($templateStream);
+        $env->expects(self::once())->method('parse')->with($templateStream)
             ->willThrowException(new \Twig_Error_Syntax('error'));
 
         $validator = new TwigSyntaxValidator($env);
@@ -59,13 +59,12 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateNoParse()
     {
-        $message = 'My message';
         $template = '{{ variable }}';
         $templateStream = $this->getMockTokenStream();
 
         $env = $this->getMockEnvironment();
-        $env->expects($this->once())->method('tokenize')->with($template)->willReturn($templateStream);
-        $env->expects($this->never())->method('parse')->withAnyParameters();
+        $env->expects(self::once())->method('tokenize')->with($template)->willReturn($templateStream);
+        $env->expects(self::never())->method('parse')->withAnyParameters();
 
         $validator = new TwigSyntaxValidator($env);
         $validator->initialize($this->getMockContext());
@@ -82,8 +81,8 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
         $templateStream = $this->getMockTokenStream();
 
         $env = $this->getMockEnvironment();
-        $env->expects($this->once())->method('tokenize')->with($template)->willReturn($templateStream);
-        $env->expects($this->once())->method('parse')->with($templateStream);
+        $env->expects(self::once())->method('tokenize')->with($template)->willReturn($templateStream);
+        $env->expects(self::once())->method('parse')->with($templateStream);
 
         $validator->validate($template, new TwigSyntax(array('environment' => $env)));
     }
@@ -98,7 +97,7 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new TwigSyntaxValidator($this->getMockEnvironment(true));
         $validator->initialize($this->getMockContext());
 
-        $validator->validate($template, $this->getMock('\\Symfony\\Component\\Validator\\Constraint'));
+        $validator->validate($template, $this->getMock('Symfony\Component\Validator\Constraint'));
     }
 
     /**
@@ -120,34 +119,50 @@ class TwigSyntaxValidatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @param bool|false $neverInvoked
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Twig_Environment
+     */
     protected function getMockEnvironment($neverInvoked = false)
     {
-        $env = $this->getMockBuilder('\\Twig_Environment')->disableOriginalConstructor()->getMock();
+        $env = $this->getMockBuilder('Twig_Environment')->disableOriginalConstructor()->getMock();
         if ($neverInvoked === false) {
             return $env;
         }
 
-        $env->expects($this->never())->method('tokenize');
-        $env->expects($this->never())->method('parse');
+        $env->expects(self::never())->method('tokenize');
+        $env->expects(self::never())->method('parse');
 
         return $env;
     }
 
+    /**
+     * @param bool|false $message
+     * @param string $template
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\Validator\ExecutionContextInterface|\Symfony\Component\Validator\Context\ExecutionContextInterface
+     */
     protected function getMockContext($message = false, $template = '')
     {
-        $context = $this->getMock('\\Symfony\\Component\\Validator\\ExecutionContextInterface');
+        if (interface_exists('Symfony\Component\Validator\Context\ExecutionContextInterface', true)) {
+            $context = $this->getMock('Symfony\Component\Validator\Context\ExecutionContextInterface');
+        } else {
+            $context = $this->getMock('Symfony\Component\Validator\ExecutionContextInterface');
+        }
 
         if ($message !== false) {
-            $context->expects($this->once())->method('addViolation')->with($message, array('{{ value }}' => '"'.$template.'"'));
+            $context->expects(self::once())->method('addViolation')->with($message, array('{{ value }}' => '"'.$template.'"'));
         } else {
-            $context->expects($this->never())->method('addViolation')->withAnyParameters();
+            $context->expects(self::never())->method('addViolation')->withAnyParameters();
         }
 
         return $context;
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Twig_TokenStream
+     */
     protected function getMockTokenStream()
     {
-        return $this->getMockBuilder('\\Twig_TokenStream')->disableOriginalConstructor()->getMock();
+        return $this->getMockBuilder('Twig_TokenStream')->disableOriginalConstructor()->getMock();
     }
 }

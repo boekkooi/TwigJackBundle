@@ -16,7 +16,7 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
         $valueNode = new \Twig_Node_Expression_Constant('js', 1);
         $node = new DeferReference('defer', new \Twig_Node(array($valueNode)), 1);
 
-        $this->assertEquals($valueNode, $node->getNode('name'));
+        self::assertEquals($valueNode, $node->getNode('name'));
     }
 
     /**
@@ -35,9 +35,9 @@ class DeferReferenceTest extends \Twig_Test_NodeTestCase
      * @covers Boekkooi\Bundle\TwigJackBundle\Twig\Node\Expression\DeferReference::compile
      * @dataProvider getTests
      */
-    public function testCompile($node, $source, $environment = null)
+    public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
-        parent::testCompile($node, $source, $environment);
+        parent::testCompile($node, $source, $environment, $isPattern);
     }
 
     public function getTests()
