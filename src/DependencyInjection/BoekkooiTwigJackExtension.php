@@ -149,28 +149,16 @@ class BoekkooiTwigJackExtension extends Extension
     }
 
     /**
-     * @param array $config
      * @param ContainerBuilder $container
-     * @param $loader
+     * @param LoaderInterface $loader
+     * @param array $config
      */
-    public function loadExclamation(ContainerBuilder $container, $loader, array $config)
+    public function loadExclamation(ContainerBuilder $container, LoaderInterface $loader, array $config)
     {
-        if (!$config['exclamation']) {
-            return;
+        $container->setParameter('boekkooi.twig_jack.exclamation', $config['exclamation']);
+
+        if ($config['exclamation']) {
+            $loader->load('exclamation.yml');
         }
-
-        $loader->load('exclamation.yml');
-
-        $container->getDefinition('templating.name_parser')
-            ->setClass('%templating.name_parser.class%');
-
-        $container->getDefinition('templating.cache_warmer.template_paths')
-            ->setClass('%templating.cache_warmer.template_paths.class%');
-
-        $container->getDefinition('assetic.twig_formula_loader')
-            ->setClass('%assetic.twig_formula_loader.class%');
-
-
-        $container->setParameter('boekkooi.twig_jack.exclamation', true);
     }
 }

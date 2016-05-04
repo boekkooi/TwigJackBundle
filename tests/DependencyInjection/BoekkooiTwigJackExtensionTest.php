@@ -74,9 +74,7 @@ class BoekkooiTwigJackExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderNotHasService('boekkooi.twig_jack.constraint_validator');
         $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.defer.prefix');
 
-        $this->assertContainerBuilderHasService('templating.name_parser', 'Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser');
-        $this->assertContainerBuilderHasService('templating.cache_warmer.template_paths', 'Boekkooi\Bundle\TwigJackBundle\CacheWarmer\TemplatePathsCacheWarmer');
-        $this->assertContainerBuilderHasService('assetic.twig_formula_loader', 'Boekkooi\Bundle\TwigJackBundle\Assetic\TwigFormulaLoader');
+        $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.exclamation', true);
     }
 
     public function testLoadEnabled()
@@ -93,7 +91,7 @@ class BoekkooiTwigJackExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('boekkooi.twig_jack.defer.extension');
         $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.defer.prefix', 'foo_bar');
 
-        $this->assertContainerBuilderHasService('templating.name_parser', 'Boekkooi\Bundle\TwigJackBundle\Templating\TemplateNameParser');
+        $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.exclamation', true);
     }
 
     public function testLoadDisabled()
@@ -106,7 +104,8 @@ class BoekkooiTwigJackExtensionTest extends AbstractExtensionTestCase
         ));
 
         $this->assertContainerBuilderNotHasService('boekkooi.twig_jack.defer.extension');
-        $this->assertContainerBuilderHasService('templating.name_parser', 'Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser');
+
+        $this->assertContainerBuilderHasParameter('boekkooi.twig_jack.exclamation', false);
     }
 
     public function testLoadDeferTrue()

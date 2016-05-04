@@ -16,14 +16,25 @@ class ExclamationPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (
-            !$container->hasDefinition('templating.cache_warmer.template_paths') ||
             !$container->hasParameter('boekkooi.twig_jack.exclamation') ||
             !$container->getParameter('boekkooi.twig_jack.exclamation')
         ) {
             return;
         }
 
+        # This will fail when templating is off
+        # http://symfony.com/doc/current/book/templating.html#template-configuration
+        $container->getDefinition('templating.name_parser')
+            ->setClass('%templating.name_parser.class%');
+
         $container->getDefinition('templating.cache_warmer.template_paths')
+            ->setClass('%templating.cache_warmer.template_paths.class%')
             ->addArgument(new Reference('kernel'));
+
+        // Patch assetic service when availible
+        if ($container->hasDefinition('assetic.twig_formula_loader')) {
+            $container->getDefinition('assetic.twig_formula_loader')
+                ->setClass('%assetic.twig_formula_loader.class%');
+        }
     }
 }
