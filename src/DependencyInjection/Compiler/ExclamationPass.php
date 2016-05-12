@@ -32,7 +32,10 @@ class ExclamationPass implements CompilerPassInterface
             ->addArgument(new Reference('kernel'));
 
         // Patch assetic service when availible
-        if ($container->hasDefinition('assetic.twig_formula_loader')) {
+        if ($container->hasDefinition('assetic.twig_formula_loader.real')) {
+            $container->getDefinition('assetic.twig_formula_loader.real')
+                ->setClass('%assetic.twig_formula_loader.class%');
+        } elseif ($container->hasDefinition('assetic.twig_formula_loader')) {
             $container->getDefinition('assetic.twig_formula_loader')
                 ->setClass('%assetic.twig_formula_loader.class%');
         }

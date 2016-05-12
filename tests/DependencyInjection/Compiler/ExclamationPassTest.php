@@ -46,6 +46,28 @@ class ExclamationPassTest extends AbstractCompilerPassTestCase
     {
         $this->setDefinition('templating.name_parser', new Definition(__CLASS__));
         $this->setDefinition('templating.cache_warmer.template_paths', new Definition(__CLASS__));
+        $this->setDefinition('assetic.twig_formula_loader.real', new Definition(__CLASS__));
+        $this->setDefinition('assetic.twig_formula_loader', new Definition(__CLASS__));
+
+        $this->setParameter('boekkooi.twig_jack.exclamation', true);
+
+        $this->setParameter('templating.name_parser.class', 'DummyNameParser');
+        $this->setParameter('templating.cache_warmer.template_paths.class', 'DummyTemplatePaths');
+        $this->setParameter('assetic.twig_formula_loader.class', 'DummyAssetic');
+
+        $this->compile();
+
+        $this->assertContainerBuilderHasService('assetic.twig_formula_loader.real', 'DummyAssetic');
+        $this->assertContainerBuilderHasService('assetic.twig_formula_loader', __CLASS__);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_change_the_assetic_service_when_enabled_fallback()
+    {
+        $this->setDefinition('templating.name_parser', new Definition(__CLASS__));
+        $this->setDefinition('templating.cache_warmer.template_paths', new Definition(__CLASS__));
         $this->setDefinition('assetic.twig_formula_loader', new Definition(__CLASS__));
 
         $this->setParameter('boekkooi.twig_jack.exclamation', true);
@@ -57,6 +79,7 @@ class ExclamationPassTest extends AbstractCompilerPassTestCase
         $this->compile();
 
         $this->assertContainerBuilderHasService('assetic.twig_formula_loader', 'DummyAssetic');
+        $this->assertContainerBuilderNotHasService('assetic.twig_formula_loader.real');
     }
 
     /**
