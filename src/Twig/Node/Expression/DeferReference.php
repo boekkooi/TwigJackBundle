@@ -25,7 +25,7 @@ class DeferReference extends \Twig_Node_Expression_BlockReference
      */
     public function compile(Twig_Compiler $compiler)
     {
-        if ($this->getAttribute('as_string')) {
+        if ($this->hasAttribute('as_string') && $this->getAttribute('as_string')) {
             $compiler->raw('(string) ');
         }
 
